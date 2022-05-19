@@ -12,5 +12,5 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
     User selectOne(User where);
-
+    int insert(User user);
 }

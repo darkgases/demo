@@ -40,7 +40,7 @@ public class User {
     /**
      * 用户openid
      **/
-    private String userOpenId;
+    private String userOpenid;
     /**
      * 创建时间
      **/

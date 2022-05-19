@@ -10,7 +10,7 @@
         <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
         <result column="USER_AGE" jdbcType="VARCHAR" property="userAge" />
         <result column="USER_SEX" jdbcType="VARCHAR" property="userSex" />
-        <result column="USER_OPENID" jdbcType="VARCHAR" property="userOpenId" />
+        <result column="USER_OPENID" jdbcType="VARCHAR" property="userOpenid" />
         <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
         <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
     </resultMap>
@@ -62,8 +62,8 @@
                 USER_SEX= #{userSex}
                 AND
             </if>
-            <if test="userOpenId != null">
-                USER_OPENID= #{userOpenId}
+            <if test="userOpenid != null">
+                USER_OPENID= #{userOpenid}
                 AND
             </if>
             <if test="createTime != null">
@@ -86,6 +86,69 @@
             <include refid="Base_Where" />
         </where>
     </sql>
+
+    <insert id="insert" >
+        insert into
+        <include refid="Table_Name" />
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userAccount != null">
+                USER_ACCOUNT,
+            </if>
+            <if test="userPhone != null">
+                USER_PHONE,
+            </if>
+            <if test="userPassword != null">
+                USER_PASSWORD,
+            </if>
+            <if test="userName != null">
+                USER_NAME,
+            </if>
+            <if test="userAge != null">
+                USER_AGE,
+            </if>
+            <if test="userSex != null">
+                USER_SEX,
+            </if>
+            <if test="userOpenid != null">
+                USER_OPENID,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userAccount != null">
+                #{userAccount},
+            </if>
+            <if test="userPhone != null">
+                #{userPhone},
+            </if>
+            <if test="userPassword != null">
+                #{userPassword},
+            </if>
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="userAge != null">
+                #{userAge},
+            </if>
+            <if test="userSex != null">
+                #{userSex},
+            </if>
+            <if test="userOpenid != null">
+                #{userOpenid},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime}
+            </if>
+        </trim>
+    </insert>
 
     <select id="selectOne"  resultMap="BaseResultMap">
         <include refid="Base_Select" />
@@ -124,8 +187,8 @@
             <if test="userSex != null">
                 USER_SEX=#{userSex},
             </if>
-            <if test="userOpenId != null">
-                USER_OPENID=#{userOpenId},
+            <if test="userOpenid != null">
+                USER_OPENID=#{userOpenid},
             </if>
             <if test="createTime != null">
                 CREATE_TIME=#{createTime},
@@ -165,8 +228,8 @@
             <if test="s.userSex != null">
                 USER_SEX=#{s.userSex},
             </if>
-            <if test="s.userOpenId != null">
-                USER_OPENID=#{s.userOpenId},
+            <if test="s.userOpenid != null">
+                USER_OPENID=#{s.userOpenid},
             </if>
             <if test="s.createTime != null">
                 CREATE_TIME=#{s.createTime},
@@ -205,8 +268,8 @@
                     USER_SEX=#{w.userSex}
                     AND
                 </if>
-                <if test="w.userOpenId != null">
-                    USER_OPENID=#{w.userOpenId}
+                <if test="w.userOpenid != null">
+                    USER_OPENID=#{w.userOpenid}
                     AND
                 </if>
                 <if test="w.createTime != null">
