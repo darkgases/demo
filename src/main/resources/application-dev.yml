@@ -1,0 +1,50 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1/test?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    #com.mysql.cj.jdbc.Driver/com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource #修改默认hikari配置源
+    #druid数据源专有配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionoProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+#mybatis
+mybatis:
+  #加载 mapper.xml 文件到容器中
+  mapper-locations: classpath:mapper/*.xml
+  # 别名，简化 mapper.xml 中请求响应参数类型
+  type-aliases-package: com.hirain.entity
+  configuration:
+    #开启驼峰映射
+    map-underscore-to-camel-case: true
+    # sql日志的打印 (与logging-level-com.xxx.com.dao.mapper选择一项即可)
+    # StdOutImpl会打印sql，但是同时多出其他日志
+    # Slf4jImpl不会打印sql
+    # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+logging:
+  # level:
+    # com.example.cn.vx.demo.mapper: debug
+  file:
+    #指定日志文件生成的位置
+    name: D:/home/learn/vx/spring.log
+

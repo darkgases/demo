@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.example.cn.vx.demo.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.example.cn.vx.demo.entity.User">
+        <result column="USER_ID" jdbcType="INTEGER" property="userId" />
+        <result column="USER_ACCOUNT" jdbcType="VARCHAR" property="userAccount" />
+        <result column="USER_PHONE" jdbcType="VARCHAR" property="userPhone" />
+        <result column="USER_PASSWORD" jdbcType="VARCHAR" property="userPassword" />
+        <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+        <result column="USER_AGE" jdbcType="VARCHAR" property="userAge" />
+        <result column="USER_SEX" jdbcType="VARCHAR" property="userSex" />
+        <result column="USER_OPENID" jdbcType="VARCHAR" property="userOpenId" />
+        <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+        <result column="UPDATE_TIME" jdbcType="VARCHAR" property="updateTime" />
+    </resultMap>
+
+    <sql id="Table_Name">
+		USER_INFO
+	</sql>
+
+    <sql id="Base_Column">
+		USER_ID,
+		USER_ACCOUNT,
+		USER_PHONE,
+		USER_PASSWORD,
+		USER_NAME,
+		USER_AGE,
+		USER_SEX,
+		USER_OPENID,
+		CREATE_TIME,
+		UPDATE_TIME
+	</sql>
+
+    <sql id="Base_Where">
+        <trim suffixOverrides="AND">
+            <if test="userId != null and userId != 0">
+                USER_ID= #{userId}
+                AND
+            </if>
+            <if test="userAccount != null">
+                USER_ACCOUNT= #{userAccount}
+                AND
+            </if>
+            <if test="userPhone != null">
+                USER_PHONE= #{userPhone}
+                AND
+            </if>
+            <if test="userPassword != null">
+                USER_PASSWORD= #{userPassword}
+                AND
+            </if>
+            <if test="userName != null">
+                USER_NAME= #{userName}
+                AND
+            </if>
+            <if test="userAge != null">
+                USER_AGE= #{userAge}
+                AND
+            </if>
+            <if test="userSex != null">
+                USER_SEX= #{userSex}
+                AND
+            </if>
+            <if test="userOpenId != null">
+                USER_OPENID= #{userOpenId}
+                AND
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME= #{createTime}
+                AND
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME= #{updateTime}
+                AND
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="Base_Select">
+        select
+        <include refid="Base_Column" />
+        from
+        <include refid="Table_Name" />
+        <where>
+            <include refid="Base_Where" />
+        </where>
+    </sql>
+
+    <select id="selectOne"  resultMap="BaseResultMap">
+        <include refid="Base_Select" />
+    </select>
+
+    <delete id="delete" >
+        delete from
+        <include refid="Table_Name" />
+        <where>
+            <include refid="Base_Where" />
+        </where>
+    </delete>
+
+    <update id="update" >
+        update
+        <include refid="Table_Name" />
+        <set>
+            <if test="userId != null">
+                USER_ID=#{userId},
+            </if>
+            <if test="userAccount != null">
+                USER_ACCOUNT=#{userAccount},
+            </if>
+            <if test="userPhone != null">
+                USER_PHONE=#{userPhone},
+            </if>
+            <if test="userPassword != null">
+                USER_PASSWORD=#{userPassword},
+            </if>
+            <if test="userName != null">
+                USER_NAME=#{userName},
+            </if>
+            <if test="userAge != null">
+                USER_AGE=#{userAge},
+            </if>
+            <if test="userSex != null">
+                USER_SEX=#{userSex},
+            </if>
+            <if test="userOpenId != null">
+                USER_OPENID=#{userOpenId},
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME=#{createTime},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME=#{updateTime},
+            </if>
+        </set>
+        <where>
+            <include refid="Base_Where" />
+        </where>
+    </update>
+
+
+    <update id="updateByEntity" >
+        UPDATE
+        <include refid="Table_Name" />
+        <set>
+            <if test="s.userId != null">
+                USER_ID=#{s.userId},
+            </if>
+            <if test="s.userAccount != null">
+                USER_ACCOUNT=#{s.userAccount},
+            </if>
+            <if test="s.userPhone != null">
+                USER_PHONE=#{s.userPhone},
+            </if>
+            <if test="s.userPassword != null">
+                USER_PASSWORD=#{s.userPassword},
+            </if>
+            <if test="s.userName != null">
+                USER_NAME=#{s.userName},
+            </if>
+            <if test="s.userAge != null">
+                USER_AGE=#{s.userAge},
+            </if>
+            <if test="s.userSex != null">
+                USER_SEX=#{s.userSex},
+            </if>
+            <if test="s.userOpenId != null">
+                USER_OPENID=#{s.userOpenId},
+            </if>
+            <if test="s.createTime != null">
+                CREATE_TIME=#{s.createTime},
+            </if>
+            <if test="s.updateTime != null">
+                UPDATE_TIME=#{s.updateTime},
+            </if>
+        </set>
+        <where>
+            <trim prefix="(" suffix=")" suffixOverrides="AND">
+                <if test="w.userId != null">
+                    USER_ID=#{w.userId}
+                    AND
+                </if>
+                <if test="w.userAccount != null">
+                    USER_ACCOUNT=#{w.userAccount}
+                    AND
+                </if>
+                <if test="w.userPhone != null">
+                    USER_PHONE=#{w.userPhone}
+                    AND
+                </if>
+                <if test="w.userPassword != null">
+                    USER_PASSWORD=#{w.userPassword}
+                    AND
+                </if>
+                <if test="w.userName != null">
+                    USER_NAME=#{w.userName}
+                    AND
+                </if>
+                <if test="w.userAge != null">
+                    USER_AGE=#{w.userAge}
+                    AND
+                </if>
+                <if test="w.userSex != null">
+                    USER_SEX=#{w.userSex}
+                    AND
+                </if>
+                <if test="w.userOpenId != null">
+                    USER_OPENID=#{w.userOpenId}
+                    AND
+                </if>
+                <if test="w.createTime != null">
+                    CREATE_TIME=#{w.createTime}
+                    AND
+                </if>
+                <if test="w.updateTime != null">
+                    UPDATE_TIME=#{w.updateTime}
+                    AND
+                </if>
+            </trim>
+        </where>
+    </update>
+</mapper>
