@@ -1,9 +1,6 @@
 package com.example.cn.vx.demo.service.user.impl;
 
-import com.example.cn.vx.demo.service.user.api.LoginImplInput;
-import com.example.cn.vx.demo.service.user.api.LoginImplOutput;
-import com.example.cn.vx.demo.service.user.api.UserAddImplInput;
-import com.example.cn.vx.demo.service.user.api.UserAddImplOutput;
+import com.example.cn.vx.demo.service.user.api.*;
 
 /**
  * @author: dengshuai
@@ -23,4 +20,12 @@ public interface UserService {
      * @ps:用户注册
      */
     UserAddImplOutput userAdd(UserAddImplInput input);
+
+    /**
+     * @param input
+     * @return
+     * @ps:用户信息更新
+     */
+    UpdateUserInfoImplOutput updateUserInfo(UpdateUserInfoImplInput input);
+
 }

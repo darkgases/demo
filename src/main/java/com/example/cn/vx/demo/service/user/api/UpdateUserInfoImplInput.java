@@ -1,26 +1,32 @@
-package com.example.cn.vx.demo.entity;
+package com.example.cn.vx.demo.service.user.api;
 
+import com.example.cn.vx.demo.common.ServiceCommonInput;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author: dengshuai
- * @Date: 2022/05/16 15:25
+ * @Date: 2022/05/23 16:16
  */
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class User {
+public class UpdateUserInfoImplInput extends ServiceCommonInput {
     /**
-     * 用户id
+     * 更新类型
      **/
-    private int userId;
+    private String updateType;
     /**
      * 用户账号
      **/
     private String userAccount;
     /**
-     * 用户手机号
+     * 用户旧手机号
      **/
     private String userPhone;
+    /**
+     * 用户手机号
+     **/
+    private String oldUserPhone;
     /**
      * 用户密码
      **/
@@ -46,8 +52,8 @@ public class User {
      **/
     private String createTime;
     /**
-     * 更新日期
+     * 更新时间
      **/
     private String updateTime;
-
 }
+

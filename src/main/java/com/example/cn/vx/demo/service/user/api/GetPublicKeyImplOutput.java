@@ -1,16 +1,15 @@
 package com.example.cn.vx.demo.service.user.api;
 
 import com.example.cn.vx.demo.common.ServiceCommonOutput;
-import com.example.cn.vx.demo.entity.UserInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * @author: dengshuai
- * @Date: 2022/05/17 16:08
+ * @Date: 2022/05/24 15:21
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class LoginImplOutput extends ServiceCommonOutput {
-    private UserInfo userInfo;
+public class GetPublicKeyImplOutput extends ServiceCommonOutput {
+    private String publicKey;
 }

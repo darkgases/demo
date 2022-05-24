@@ -2,23 +2,24 @@ package com.example.cn.vx.demo.service.user;
 
 import com.example.cn.vx.demo.common.ReturnCode;
 import com.example.cn.vx.demo.common.ReturnMsg;
-import com.example.cn.vx.demo.entity.User;
+import com.example.cn.vx.demo.common.des.RSACoder;
+import com.example.cn.vx.demo.common.enums.UserState;
 import com.example.cn.vx.demo.entity.UserInfo;
 import com.example.cn.vx.demo.mapper.UserInfoMapper;
-import com.example.cn.vx.demo.mapper.UserMapper;
-import com.example.cn.vx.demo.service.user.api.LoginImplInput;
-import com.example.cn.vx.demo.service.user.api.LoginImplOutput;
-import com.example.cn.vx.demo.service.user.api.UserAddImplInput;
-import com.example.cn.vx.demo.service.user.api.UserAddImplOutput;
+import com.example.cn.vx.demo.service.user.api.*;
 import com.example.cn.vx.demo.service.user.impl.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
-import java.util.Dictionary;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.ResourceBundle;
 
 /**
  * @author: dengshuai
@@ -27,30 +28,24 @@ import java.util.Dictionary;
 @Transactional(rollbackFor = Exception.class)
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private UserInfoMapper userInfoMapper;
 
-
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    ResourceBundle rb = ResourceBundle.getBundle("customizeParam");
 
     @Override
     public UserAddImplOutput userAdd(UserAddImplInput input){
         logger.info("UserServiceImpl-userAdd服务开始");
         //signInType注册方式 1：手机号注册 2：账号方式注册
-        String signInType = "";
+        String signInType = input.getSignInType();
         UserAddImplOutput out = new UserAddImplOutput();
         UserInfo userInfo = new UserInfo();
-        if (input.getUserAccount() == null || "".equals(input.getUserAccount())){
-            signInType="1";
-            userInfo.setUserPhone(input.getUserPhone());
-        }else{
-            signInType="2";
-            userInfo.setUserAccount(input.getUserAccount());
-        }
-        UserInfo user = userInfoMapper.selectOne(userInfo);
+        UserInfo user = getUserInfo(input.getUserAccount(),input.getUserPhone());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
         if (user == null){
             if (input.getUserPassword() != null && input.getUserPassword() != ""){
                 userInfo.setUserPassword(input.getUserPassword());
@@ -67,8 +62,13 @@ public class UserServiceImpl implements UserService {
             if (input.getUserOpenid() != null && input.getUserOpenid() != ""){
                 userInfo.setUserOpenid(input.getUserOpenid());
             }
+            userInfo.setPasswordErrTime("0");
+            userInfo.setUserState(UserState.valueOf("NORMAL").getUserState());
+            userInfo.setUserInfoState(userInfo.checkInfoState(userInfo));
+            userInfo.setCreateTime(sdf.format(now));
+            userInfo.setUpdateTime(sdf.format(now));
             int userId = userInfoMapper.insert(userInfo);
-            if (userId == 1){
+            if (userId > 0){
                 out.setCode(ReturnCode.SUCCESS);
                 out.setMsg(ReturnMsg.SUCCESS);
             }else{
@@ -79,12 +79,59 @@ public class UserServiceImpl implements UserService {
             if ("1".equals(signInType)){
                 out.setCode(ReturnCode.THE_PHONE_IS_EXIST);
                 out.setMsg(ReturnMsg.THE_PHONE_IS_EXIST);
-            }else if("2".equals(signInType)){
+            }else {
                 out.setCode(ReturnCode.THE_ACCOUNT_IS_EXIST);
                 out.setMsg(ReturnMsg.THE_ACCOUNT_IS_EXIST);
             }
         }
         logger.info("UserServiceImpl-userAdd服务结束");
+        return out;
+    }
+
+    @Override
+    public UpdateUserInfoImplOutput updateUserInfo(UpdateUserInfoImplInput input) {
+        logger.info("UserServiceImpl-updateUserInfo服务开始");
+        UpdateUserInfoImplOutput out = new UpdateUserInfoImplOutput();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
+        UserInfo userInfo = getUserInfo(input.getUserAccount(),input.getOldUserPhone());
+        if (userInfo == null){
+            out.setCode(ReturnCode.THE_USER_IS_NOT_EXIST);
+            out.setMsg(ReturnMsg.THE_USER_IS_NOT_EXIST);
+            logger.info("UserServiceImpl-updateUserInfo服务结束");
+            return out;
+        }
+        switch (input.getUpdateType()){
+            case "1":
+                logger.info("完善资料");
+                userInfo.setUserAge(input.getUserAge());
+                userInfo.setUserName(input.getUserName());
+                userInfo.setUserSex(input.getUserSex());
+                userInfo.setUserInfoState(userInfo.checkInfoState(userInfo));
+                userInfo.setUpdateTime(sdf.format(now));
+                userInfoMapper.updateByPrimaryKey(userInfo);
+                break;
+            case  "2":
+                logger.info("更换手机号");
+                userInfo.setUserPhone(input.getUserPhone());
+                userInfo.setUpdateTime(sdf.format(now));
+                userInfoMapper.updateByPrimaryKey(userInfo);
+                break;
+            case  "3":
+                logger.info("账户状态初始化");
+                userInfo.setUserState(UserState.valueOf("NORMAL").getUserState());
+                userInfo.setUserStateMsg("");
+                userInfo.setPasswordErrTime("0");
+                userInfo.setUpdateTime(sdf.format(now));
+                userInfoMapper.updateByPrimaryKey(userInfo);
+                break;
+            default:
+                logger.info("暂无内容");
+        }
+        out.setCode(ReturnCode.SUCCESS);
+        out.setMsg(ReturnMsg.SUCCESS);
+        out.setUserInfo(userInfo);
+        logger.info("UserServiceImpl-updateUserInfo服务结束");
         return out;
     }
 
@@ -95,21 +142,46 @@ public class UserServiceImpl implements UserService {
         String userAccount = input.getUserAccount();
         String userPassword = input.getUserPassword();
         String userPhone = input.getUserPhone();
-        UserInfo where = new UserInfo();
-        if (userAccount == null || "".equals(userAccount)){
-            where.setUserPhone(userPhone);
-        }else{
-            where.setUserAccount(userAccount);
-        }
-        UserInfo user = userInfoMapper.selectOne(where);
-        System.out.println(user);
+        UserInfo user = getUserInfo(userAccount,userPhone);
         if (user!=null){
-            if (user.getUserPassword().equals(userPassword)){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date now = new Date();
+            if (!user.getUserState().equals(UserState.valueOf("NORMAL").getUserState())){
+                out.setCode(ReturnCode.THE_STATE_ABNORMAL);
+                out.setMsg(ReturnMsg.THE_STATE_ABNORMAL);
+                logger.info("UserServiceImpl-login服务结束");
+                return out;
+            }
+            int maxErrTime = Integer.parseInt(rb.getString("THE_PASSWORD_MAX_ERR_TIME"));
+            String dbPassword = user.getUserPassword();
+            Boolean check = false;
+            try {
+                check = checkPassword(dbPassword, userPassword);
+            } catch (Exception e) {
+                logger.error("UserServiceImpl-login服务密码解密错误");
+                e.printStackTrace();
+            }
+            if (check){
                 out.setCode(ReturnCode.SUCCESS);
                 out.setMsg(ReturnMsg.SUCCESS);
+                out.setUserInfo(user);
             }else{
-                out.setCode(ReturnCode.THE_PASSWORD_ERROR);
-                out.setMsg(ReturnMsg.THE_PASSWORD_ERROR);
+                int nowErroTime = Integer.parseInt(user.getPasswordErrTime()) + 1;
+                if (nowErroTime >= maxErrTime){
+                    user.setUserState(UserState.valueOf("LOCK").getUserState());
+                    user.setUserStateMsg(ReturnMsg.THE_STATE_LOCK);
+                    user.setPasswordErrTime(String.valueOf(nowErroTime));
+                    user.setUpdateTime(sdf.format(now));
+                    userInfoMapper.updateByPrimaryKey(user);
+                    out.setCode(ReturnCode.THE_STATE_LOCK);
+                    out.setMsg(ReturnMsg.THE_STATE_LOCK);
+                }else{
+                    user.setPasswordErrTime(String.valueOf(nowErroTime));
+                    user.setUpdateTime(sdf.format(now));
+                    userInfoMapper.updateByPrimaryKey(user);
+                    out.setCode(ReturnCode.THE_PASSWORD_ERROR);
+                    out.setMsg(ReturnMsg.THE_PASSWORD_ERROR);
+                }
             }
         }else{
             out.setCode(ReturnCode.THE_USER_IS_NOT_EXIST);
@@ -117,5 +189,54 @@ public class UserServiceImpl implements UserService {
         }
         logger.info("UserServiceImpl-login服务结束");
         return out;
+    }
+
+    /**
+     * 传入账号、手机号获取用户信息
+     */
+    public UserInfo getUserInfo(String userAccount, String userPhone){
+        UserInfo userInfo = new UserInfo();
+        if (userAccount == null||userAccount == ""){
+            userInfo.setUserPhone(userPhone);
+        }else{
+            userInfo.setUserAccount(userAccount);
+        }
+        userInfo = userInfoMapper.selectOne(userInfo);
+        return userInfo;
+    }
+
+    public Boolean checkPassword(String dbPassword,String paramPassword) throws Exception {
+        Boolean check = false;
+        String rsaPrivateKey = rb.getString("RSAPrivateKey");
+        //传入的密码String转byte
+        BASE64Decoder dec=new BASE64Decoder();
+        //数据库存储的内容
+        byte[] dbByte = new byte[0];
+        //前端上传的内容
+        byte[] paramByte = new byte[0];
+        try {
+            dbByte = dec.decodeBuffer(dbPassword);
+            paramByte = dec.decodeBuffer(paramPassword);
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        //私钥解密
+        byte[] dbByteDec = RSACoder.decryptByPrivateKey(dbByte, rsaPrivateKey);
+        byte[] paramByteDec = RSACoder.decryptByPrivateKey(dbByte, rsaPrivateKey);
+        //byte转String
+        BASE64Encoder enc=new BASE64Encoder();
+        //数据库存储、解密后的内容
+//        String dbStringDec=enc.encode(dbByteDec);
+        String dbStringDec = new String(dbByteDec);
+        System.out.println("数据库存储、解密后的内容:"+dbStringDec);
+//        前端上送、解密后的内容
+//        String paramStringDec=enc.encode(paramByteDec);
+        String paramStringDec = new String(paramByteDec);
+        System.out.println("前端上送、解密后的内容:"+paramStringDec);
+        if (dbStringDec.equals(paramStringDec)){
+            check = true;
+        }
+        return check;
     }
 }

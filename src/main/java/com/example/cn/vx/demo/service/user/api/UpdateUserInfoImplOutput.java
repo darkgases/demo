@@ -7,10 +7,10 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @author: dengshuai
- * @Date: 2022/05/17 16:08
+ * @Date: 2022/05/23 16:16
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class LoginImplOutput extends ServiceCommonOutput {
+public class UpdateUserInfoImplOutput extends ServiceCommonOutput {
     private UserInfo userInfo;
 }
