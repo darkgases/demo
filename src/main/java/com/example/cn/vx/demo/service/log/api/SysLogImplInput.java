@@ -1,18 +1,14 @@
-package com.example.cn.vx.demo.service.user.api;
+package com.example.cn.vx.demo.service.log.api;
 
 import com.example.cn.vx.demo.common.CommonUtil;
 import com.example.cn.vx.demo.common.ServiceCommonInput;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author: dengshuai
- * @Date: 2022/05/24 15:21
+ * @Date: 2022/05/25 11:20
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class GetPublicKeyImplInput extends ServiceCommonInput {
-    public GetPublicKeyImplInput(){
+public class SysLogImplInput extends ServiceCommonInput {
+    public SysLogImplInput(){
         String tranSeq = CommonUtil.getTranSeq();
         super.setTranSeq(tranSeq);
         super.setTranDate(tranSeq.substring(0,8));

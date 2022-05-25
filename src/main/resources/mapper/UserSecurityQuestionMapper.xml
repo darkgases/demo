@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.cn.vx.demo.mapper.UserSecurityQuestionMapper" >
+  <resultMap id="BaseResultMap" type="com.example.cn.vx.demo.entity.UserSecurityQuestion" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="question_id" property="questionId" jdbcType="INTEGER" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_security_question
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.cn.vx.demo.entity.UserSecurityQuestion" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_security_question (question_id, answer, create_time, 
+      update_time)
+    values (#{questionId,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.cn.vx.demo.entity.UserSecurityQuestion" >
+    update user_security_question
+    set question_id = #{questionId,jdbcType=INTEGER},
+      answer = #{answer,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select user_id, question_id, answer, create_time, update_time
+    from user_security_question
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select user_id, question_id, answer, create_time, update_time
+    from user_security_question
+  </select>
+</mapper>

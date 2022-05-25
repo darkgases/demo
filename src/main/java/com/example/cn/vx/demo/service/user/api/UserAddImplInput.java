@@ -1,5 +1,6 @@
 package com.example.cn.vx.demo.service.user.api;
 
+import com.example.cn.vx.demo.common.CommonUtil;
 import com.example.cn.vx.demo.common.ServiceCommonInput;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -52,4 +53,11 @@ public class UserAddImplInput extends ServiceCommonInput {
      * 更新时间
      **/
     private String updateTime;
+
+    public UserAddImplInput(){
+        String tranSeq = CommonUtil.getTranSeq();
+        super.setTranSeq(tranSeq);
+        super.setTranDate(tranSeq.substring(0,8));
+        super.setTranTime(tranSeq.substring(8,14));
+    }
 }

@@ -1,9 +1,11 @@
 package com.example.cn.vx.demo.controller;
 
+import com.example.cn.vx.demo.common.MyLog;
 import com.example.cn.vx.demo.common.ReturnCode;
 import com.example.cn.vx.demo.common.ReturnMsg;
+import com.example.cn.vx.demo.common.CommonUtil;
 import com.example.cn.vx.demo.service.user.api.*;
-import com.example.cn.vx.demo.service.user.impl.UserService;
+import com.example.cn.vx.demo.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +21,16 @@ import java.util.ResourceBundle;
  */
 @RestController
 public class UserController {
+
     @Autowired
-    private UserService userService;
+    public  UserService userService;
 
-    private ResourceBundle rb = ResourceBundle.getBundle("customizeParam");
+    public ResourceBundle rb = ResourceBundle.getBundle("customizeParam");
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("/userAdd")
-    private UserAddImplOutput userAdd(HttpServletRequest request){
+    public UserAddImplOutput userAdd(HttpServletRequest request){
         logger.info("UserController:userAdd开始");
         UserAddImplInput input = new UserAddImplInput();
         UserAddImplOutput output = new UserAddImplOutput();
@@ -76,8 +79,9 @@ public class UserController {
         return output;
     }
 
+    @MyLog(value = "登陆")
     @RequestMapping("/login")
-    private LoginImplOutput login(HttpServletRequest request){
+    public LoginImplOutput login(HttpServletRequest request){
         logger.info("UserController:login开始");
         String userAccount = request.getParameter("userAccount");
         String userPassword = request.getParameter("userPassword");
@@ -92,8 +96,9 @@ public class UserController {
         return output;
     }
 
+    @MyLog(value = "登陆")
     @RequestMapping("/updateUserInfo")
-    private UpdateUserInfoImplOutput updateUserInfo(HttpServletRequest request){
+    public UpdateUserInfoImplOutput updateUserInfo(HttpServletRequest request){
         logger.info("UserController:updateUserInfo开始");
         UpdateUserInfoImplInput  input = new UpdateUserInfoImplInput();
         UpdateUserInfoImplOutput output = new UpdateUserInfoImplOutput();
@@ -124,7 +129,7 @@ public class UserController {
     }
 
     @RequestMapping("/getPublicKey")
-    private GetPublicKeyImplOutput getPublicKeyInfo(HttpServletRequest request){
+    public GetPublicKeyImplOutput getPublicKeyInfo(HttpServletRequest request){
         logger.info("UserController:updateUserInfo开始");
         GetPublicKeyImplOutput output = new GetPublicKeyImplOutput();
         String publicKey = rb.getString("RSAPublicKey");

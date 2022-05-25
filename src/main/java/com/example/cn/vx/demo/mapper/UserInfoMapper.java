@@ -1,7 +1,6 @@
 package com.example.cn.vx.demo.mapper;
 
 import com.example.cn.vx.demo.entity.UserInfo;
-
 import java.util.List;
 
 public interface UserInfoMapper {

@@ -3,6 +3,7 @@
 <mapper namespace="com.example.cn.vx.demo.mapper.UserInfoMapper">
   <resultMap id="BaseResultMap" type="com.example.cn.vx.demo.entity.UserInfo">
     <id column="USER_ID" jdbcType="INTEGER" property="userId" />
+    <result column="USER_ROLE_ID" jdbcType="INTEGER" property="userRoleId" />
     <result column="USER_ACCOUNT" jdbcType="VARCHAR" property="userAccount" />
     <result column="USER_PHONE" jdbcType="VARCHAR" property="userPhone" />
     <result column="USER_PASSWORD" jdbcType="VARCHAR" property="userPassword" />
@@ -25,20 +26,21 @@
     <selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into user_info (USER_ACCOUNT, USER_PHONE, USER_PASSWORD,
-      USER_NAME, USER_AGE, USER_SEX,
-      USER_OPENID, USER_STATE, USER_STATE_MSG,
-      USER_INFO_STATE, PASSWORD_ERR__TIME, CREATE_TIME,
-      UPDATE_TIME)
-    values (#{userAccount,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR},
-      #{userName,jdbcType=VARCHAR}, #{userAge,jdbcType=VARCHAR}, #{userSex,jdbcType=VARCHAR},
-      #{userOpenid,jdbcType=VARCHAR}, #{userState,jdbcType=VARCHAR}, #{userStateMsg,jdbcType=VARCHAR},
-      #{userInfoState,jdbcType=VARCHAR}, #{passwordErrTime,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
-      #{updateTime,jdbcType=VARCHAR})
+    insert into user_info (USER_ROLE_ID, USER_ACCOUNT, USER_PHONE,
+      USER_PASSWORD, USER_NAME, USER_AGE,
+      USER_SEX, USER_OPENID, USER_STATE,
+      USER_STATE_MSG, USER_INFO_STATE, PASSWORD_ERR__TIME,
+      CREATE_TIME, UPDATE_TIME)
+    values (#{userRoleId,jdbcType=INTEGER}, #{userAccount,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR},
+      #{userPassword,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{userAge,jdbcType=VARCHAR},
+      #{userSex,jdbcType=VARCHAR}, #{userOpenid,jdbcType=VARCHAR}, #{userState,jdbcType=VARCHAR},
+      #{userStateMsg,jdbcType=VARCHAR}, #{userInfoState,jdbcType=VARCHAR}, #{passwordErrTime,jdbcType=VARCHAR},
+      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.example.cn.vx.demo.entity.UserInfo">
     update user_info
-    set USER_ACCOUNT = #{userAccount,jdbcType=VARCHAR},
+    set USER_ROLE_ID = #{userRoleId,jdbcType=INTEGER},
+      USER_ACCOUNT = #{userAccount,jdbcType=VARCHAR},
       USER_PHONE = #{userPhone,jdbcType=VARCHAR},
       USER_PASSWORD = #{userPassword,jdbcType=VARCHAR},
       USER_NAME = #{userName,jdbcType=VARCHAR},
@@ -54,16 +56,16 @@
     where USER_ID = #{userId,jdbcType=INTEGER}
   </update>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select USER_ID, USER_ACCOUNT, USER_PHONE, USER_PASSWORD, USER_NAME, USER_AGE, USER_SEX,
-    USER_OPENID, USER_STATE, USER_STATE_MSG, USER_INFO_STATE, PASSWORD_ERR__TIME, CREATE_TIME,
-    UPDATE_TIME
+    select USER_ID, USER_ROLE_ID, USER_ACCOUNT, USER_PHONE, USER_PASSWORD, USER_NAME,
+    USER_AGE, USER_SEX, USER_OPENID, USER_STATE, USER_STATE_MSG, USER_INFO_STATE, PASSWORD_ERR__TIME,
+    CREATE_TIME, UPDATE_TIME
     from user_info
     where USER_ID = #{userId,jdbcType=INTEGER}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">
-    select USER_ID, USER_ACCOUNT, USER_PHONE, USER_PASSWORD, USER_NAME, USER_AGE, USER_SEX,
-    USER_OPENID, USER_STATE, USER_STATE_MSG, USER_INFO_STATE, PASSWORD_ERR__TIME, CREATE_TIME,
-    UPDATE_TIME
+    select USER_ID, USER_ROLE_ID, USER_ACCOUNT, USER_PHONE, USER_PASSWORD, USER_NAME,
+    USER_AGE, USER_SEX, USER_OPENID, USER_STATE, USER_STATE_MSG, USER_INFO_STATE, PASSWORD_ERR__TIME,
+    CREATE_TIME, UPDATE_TIME
     from user_info
   </select>
 
@@ -73,6 +75,7 @@
 
   <sql id="Base_Column">
 		USER_ID,
+		USER_ROLE_ID,
 		USER_ACCOUNT,
 		USER_PHONE,
 		USER_PASSWORD,
@@ -92,6 +95,10 @@
     <trim suffixOverrides="AND">
       <if test="userId != null and userId != 0">
         USER_ID= #{userId}
+        AND
+      </if>
+      <if test="userRoleId != null and userRoleId != 0">
+        USER_ROLE_ID= #{userRoleId}
         AND
       </if>
       <if test="userAccount != null">

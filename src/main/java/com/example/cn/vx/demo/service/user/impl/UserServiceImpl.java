@@ -1,4 +1,4 @@
-package com.example.cn.vx.demo.service.user;
+package com.example.cn.vx.demo.service.user.impl;
 
 import com.example.cn.vx.demo.common.ReturnCode;
 import com.example.cn.vx.demo.common.ReturnMsg;
@@ -6,8 +6,8 @@ import com.example.cn.vx.demo.common.des.RSACoder;
 import com.example.cn.vx.demo.common.enums.UserState;
 import com.example.cn.vx.demo.entity.UserInfo;
 import com.example.cn.vx.demo.mapper.UserInfoMapper;
+import com.example.cn.vx.demo.service.user.UserService;
 import com.example.cn.vx.demo.service.user.api.*;
-import com.example.cn.vx.demo.service.user.impl.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +47,36 @@ public class UserServiceImpl implements UserService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
         if (user == null){
-            if (input.getUserPassword() != null && input.getUserPassword() != ""){
-                userInfo.setUserPassword(input.getUserPassword());
+            if ("1".equals(signInType)){
+                if (input.getUserPhone() != null && input.getUserPhone() != ""){
+                    userInfo.setUserPhone(input.getUserPhone());
+                }
+                if (input.getUserAccount() != null && input.getUserAccount() != ""){
+                    userInfo.setUserAccount(input.getUserAccount());
+                }
+            }else {
+                if (input.getUserAccount() != null && input.getUserAccount() != ""){
+                    userInfo.setUserAccount(input.getUserAccount());
+                }
             }
+            //密码公钥加密、后期放入前端处理
+            if (input.getUserPassword() != null && input.getUserPassword() != ""){
+                String rsaPublicKey = rb.getString("RSAPublicKey");
+                byte[] passwordByte = input.getUserPassword().getBytes();
+                byte[] encodedData = new byte[0];
+                try {
+                    encodedData = RSACoder.encryptByPublicKey(passwordByte, rsaPublicKey);
+                } catch (Exception e) {
+                    logger.error("UserServiceImpl-userAdd密码加密失败");
+                    e.printStackTrace();
+                }
+                //byte转String
+                BASE64Encoder enc=new BASE64Encoder();
+                String encrypt=enc.encode(encodedData);
+                System.out.println("encrypt:"+encrypt);
+                userInfo.setUserPassword(encrypt);
+            }
+
             if (input.getUserName() != null && input.getUserName() != ""){
                 userInfo.setUserName(input.getUserName());
             }
@@ -62,6 +89,7 @@ public class UserServiceImpl implements UserService {
             if (input.getUserOpenid() != null && input.getUserOpenid() != ""){
                 userInfo.setUserOpenid(input.getUserOpenid());
             }
+            userInfo.setUserRoleId(2);
             userInfo.setPasswordErrTime("0");
             userInfo.setUserState(UserState.valueOf("NORMAL").getUserState());
             userInfo.setUserInfoState(userInfo.checkInfoState(userInfo));
@@ -84,6 +112,7 @@ public class UserServiceImpl implements UserService {
                 out.setMsg(ReturnMsg.THE_ACCOUNT_IS_EXIST);
             }
         }
+        out.setTranSeq(input.getTranSeq());
         logger.info("UserServiceImpl-userAdd服务结束");
         return out;
     }
@@ -98,6 +127,7 @@ public class UserServiceImpl implements UserService {
         if (userInfo == null){
             out.setCode(ReturnCode.THE_USER_IS_NOT_EXIST);
             out.setMsg(ReturnMsg.THE_USER_IS_NOT_EXIST);
+            out.setTranSeq(input.getTranSeq());
             logger.info("UserServiceImpl-updateUserInfo服务结束");
             return out;
         }
@@ -110,12 +140,16 @@ public class UserServiceImpl implements UserService {
                 userInfo.setUserInfoState(userInfo.checkInfoState(userInfo));
                 userInfo.setUpdateTime(sdf.format(now));
                 userInfoMapper.updateByPrimaryKey(userInfo);
+                out.setCode(ReturnCode.SUCCESS);
+                out.setMsg("完善资料"+ReturnMsg.SUCCESS);
                 break;
             case  "2":
                 logger.info("更换手机号");
                 userInfo.setUserPhone(input.getUserPhone());
                 userInfo.setUpdateTime(sdf.format(now));
                 userInfoMapper.updateByPrimaryKey(userInfo);
+                out.setCode(ReturnCode.SUCCESS);
+                out.setMsg("更换手机号"+ReturnMsg.SUCCESS);
                 break;
             case  "3":
                 logger.info("账户状态初始化");
@@ -124,13 +158,16 @@ public class UserServiceImpl implements UserService {
                 userInfo.setPasswordErrTime("0");
                 userInfo.setUpdateTime(sdf.format(now));
                 userInfoMapper.updateByPrimaryKey(userInfo);
+                out.setCode(ReturnCode.SUCCESS);
+                out.setMsg("账户状态初始化"+ReturnMsg.SUCCESS);
                 break;
             default:
                 logger.info("暂无内容");
+                out.setCode(ReturnCode.SUCCESS);
+                out.setMsg(ReturnMsg.SUCCESS);
         }
-        out.setCode(ReturnCode.SUCCESS);
-        out.setMsg(ReturnMsg.SUCCESS);
         out.setUserInfo(userInfo);
+        out.setTranSeq(input.getTranSeq());
         logger.info("UserServiceImpl-updateUserInfo服务结束");
         return out;
     }
@@ -149,6 +186,7 @@ public class UserServiceImpl implements UserService {
             if (!user.getUserState().equals(UserState.valueOf("NORMAL").getUserState())){
                 out.setCode(ReturnCode.THE_STATE_ABNORMAL);
                 out.setMsg(ReturnMsg.THE_STATE_ABNORMAL);
+                out.setTranSeq(input.getTranSeq());
                 logger.info("UserServiceImpl-login服务结束");
                 return out;
             }
@@ -187,6 +225,7 @@ public class UserServiceImpl implements UserService {
             out.setCode(ReturnCode.THE_USER_IS_NOT_EXIST);
             out.setMsg(ReturnMsg.THE_USER_IS_NOT_EXIST);
         }
+        out.setTranSeq(input.getTranSeq());
         logger.info("UserServiceImpl-login服务结束");
         return out;
     }
@@ -218,7 +257,6 @@ public class UserServiceImpl implements UserService {
             dbByte = dec.decodeBuffer(dbPassword);
             paramByte = dec.decodeBuffer(paramPassword);
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
             e1.printStackTrace();
         }
         //私钥解密

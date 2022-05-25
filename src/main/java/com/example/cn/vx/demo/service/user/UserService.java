@@ -1,4 +1,4 @@
-package com.example.cn.vx.demo.service.user.impl;
+package com.example.cn.vx.demo.service.user;
 
 import com.example.cn.vx.demo.service.user.api.*;
 

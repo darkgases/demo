@@ -7,6 +7,8 @@ import java.io.Serializable;
 public class UserInfo implements Serializable {
     private Integer userId;
 
+    private Integer userRoleId;
+
     private String userAccount;
 
     private String userPhone;
@@ -41,6 +43,14 @@ public class UserInfo implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getUserRoleId() {
+        return userRoleId;
+    }
+
+    public void setUserRoleId(Integer userRoleId) {
+        this.userRoleId = userRoleId;
     }
 
     public String getUserAccount() {
@@ -154,6 +164,7 @@ public class UserInfo implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", userId=").append(userId);
+        sb.append(", userRoleId=").append(userRoleId);
         sb.append(", userAccount=").append(userAccount);
         sb.append(", userPhone=").append(userPhone);
         sb.append(", userPassword=").append(userPassword);

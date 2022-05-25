@@ -9,6 +9,10 @@ import lombok.Data;
 @Data
 public class ServiceCommonOutput {
     /**
+     * 交易流水号
+     */
+    private String tranSeq;
+    /**
      * 返回码
      */
     private String code;

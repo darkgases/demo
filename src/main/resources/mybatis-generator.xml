@@ -58,5 +58,9 @@
             <generatedKey column="user_id" sqlStatement="Mysql" identity="true" />
         </table>
 
+        <table tableName="user_role" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+            <generatedKey column="user_role_id" sqlStatement="Mysql" identity="true" />
+        </table>
+
     </context>
 </generatorConfiguration>
