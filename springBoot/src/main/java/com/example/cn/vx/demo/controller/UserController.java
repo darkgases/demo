@@ -1,9 +1,8 @@
 package com.example.cn.vx.demo.controller;
 
-import com.example.cn.vx.demo.common.MyLog;
+import com.example.cn.vx.demo.common.aop.MyLog;
 import com.example.cn.vx.demo.common.ReturnCode;
 import com.example.cn.vx.demo.common.ReturnMsg;
-import com.example.cn.vx.demo.common.CommonUtil;
 import com.example.cn.vx.demo.service.user.api.*;
 import com.example.cn.vx.demo.service.user.UserService;
 import org.slf4j.Logger;

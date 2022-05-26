@@ -1,5 +1,6 @@
-package com.example.cn.vx.demo.common;
+package com.example.cn.vx.demo.common.aop;
 
+import com.example.cn.vx.demo.common.ServiceCommonOutput;
 import com.example.cn.vx.demo.entity.TranList;
 import com.example.cn.vx.demo.entity.UserInfo;
 import com.example.cn.vx.demo.service.log.SysLogService;
@@ -30,7 +31,7 @@ public class SysLogAspect {
 
     //定义切点 @Pointcut
     //在注解的位置切入代码
-    @Pointcut("@annotation(com.example.cn.vx.demo.common.MyLog)")
+    @Pointcut("@annotation(com.example.cn.vx.demo.common.aop.MyLog)")
     public void logPoinCut() {
     }
 

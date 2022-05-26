@@ -1,6 +1,6 @@
 package com.example.cn.vx.demo.service.user.api;
 
-import com.example.cn.vx.demo.common.CommonUtil;
+import com.example.cn.vx.demo.common.until.CommonUtil;
 import com.example.cn.vx.demo.common.ServiceCommonInput;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
