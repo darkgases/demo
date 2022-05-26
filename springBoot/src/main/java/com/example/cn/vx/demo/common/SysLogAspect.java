@@ -77,7 +77,7 @@ public class SysLogAspect {
             }
         }
 
-//登陆交易无法上送userId，需要从返回中获取
+//登陆交易无法上送userId，需要从返回中获取；
         sysLog.setTranDate(String.valueOf(new Date()));
         if ("login".equals(methodName)){
             UserInfo userInfo = ((LoginImplOutput)returnValue).getUserInfo();
