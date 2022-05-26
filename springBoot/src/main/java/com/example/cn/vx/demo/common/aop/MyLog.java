@@ -1,4 +1,4 @@
-package com.example.cn.vx.demo.common;
+package com.example.cn.vx.demo.common.aop;
 
 /**
  * @author: dengshuai

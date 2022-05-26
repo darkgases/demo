@@ -1,6 +1,6 @@
 package com.example.cn.vx.demo.service.log.api;
 
-import com.example.cn.vx.demo.common.CommonUtil;
+import com.example.cn.vx.demo.common.until.CommonUtil;
 import com.example.cn.vx.demo.common.ServiceCommonInput;
 
 /**
