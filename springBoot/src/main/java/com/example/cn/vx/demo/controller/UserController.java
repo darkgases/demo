@@ -119,16 +119,28 @@ public class UserController {
             logger.info("UserController:updateUserInfo结束");
             return output;
         }
-        if (request.getParameter("userAccount") == null || "".equals(request.getParameter("userAccount"))){
-            if (request.getParameter("oldUserPhone") == null || "".equals(request.getParameter("oldUserPhone"))){
+        if (request.getParameter("userId") == null || "".equals(request.getParameter("userId"))){
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("必须参数userId缺失");
+            logger.info("UserController:updateUserInfo结束");
+            return output;
+        }
+        if ("2".equals(request.getParameter("updateType")) ){
+            if (request.getParameter("userPhone") == null || request.getParameter("userPhone") == ""){
                 output.setCode(ReturnCode.FAIL);
-                output.setMsg("账号手机号必须上传一项");
+                output.setMsg("修改手机号：新手机号不能为空");
+                logger.info("UserController:updateUserInfo结束");
+                return output;
+            }
+            if (request.getParameter("oldUserPhone") == null || request.getParameter("oldUserPhone") == ""){
+                output.setCode(ReturnCode.FAIL);
+                output.setMsg("修改手机号：旧手机号不能为空");
                 logger.info("UserController:updateUserInfo结束");
                 return output;
             }
         }
         input.setUpdateType(request.getParameter("updateType"));
-        input.setUserAccount(request.getParameter("userAccount"));
+        input.setUserId(request.getParameter("userId"));
         input.setUserName(request.getParameter("userName"));
         input.setUserAge(request.getParameter("userAge"));
         input.setUserSex(request.getParameter("userSex"));

@@ -43,77 +43,75 @@ public class UserServiceImpl implements UserService {
         String signInType = input.getSignInType();
         UserAddImplOutput out = new UserAddImplOutput();
         UserInfo userInfo = new UserInfo();
-        UserInfo user = getUserInfo(input.getUserAccount(),input.getUserPhone());
+        UserInfo user;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
-        if (user == null){
-            if ("1".equals(signInType)){
-                if (input.getUserPhone() != null && input.getUserPhone() != ""){
-                    userInfo.setUserPhone(input.getUserPhone());
-                }
-                if (input.getUserAccount() != null && input.getUserAccount() != ""){
-                    userInfo.setUserAccount(input.getUserAccount());
-                }
-            }else {
-                if (input.getUserAccount() != null && input.getUserAccount() != ""){
-                    userInfo.setUserAccount(input.getUserAccount());
-                }
-            }
-            //密码公钥加密、后期放入前端处理
-            if (input.getUserPassword() != null && input.getUserPassword() != ""){
-                String rsaPublicKey = rb.getString("RSAPublicKey");
-                byte[] passwordByte = input.getUserPassword().getBytes();
-                byte[] encodedData = new byte[0];
-                try {
-                    encodedData = RSACoder.encryptByPublicKey(passwordByte, rsaPublicKey);
-                } catch (Exception e) {
-                    logger.error("UserServiceImpl-userAdd密码加密失败");
-                    e.printStackTrace();
-                }
-                //byte转String
-                BASE64Encoder enc=new BASE64Encoder();
-                String encrypt=enc.encode(encodedData);
-                System.out.println("encrypt:"+encrypt);
-                userInfo.setUserPassword(encrypt);
-            }
-
-            if (input.getUserName() != null && input.getUserName() != ""){
-                userInfo.setUserName(input.getUserName());
-            }
-            if (input.getUserAge() != null && input.getUserAge() != ""){
-                userInfo.setUserAge(input.getUserAge());
-            }
-            if (input.getUserSex() != null && input.getUserSex() != ""){
-                userInfo.setUserSex(input.getUserSex());
-            }
-            if (input.getUserOpenid() != null && input.getUserOpenid() != ""){
-                userInfo.setUserOpenid(input.getUserOpenid());
-            }
-            userInfo.setUserRoleId(2);
-            userInfo.setPasswordErrTime("0");
-            userInfo.setUserState(UserState.valueOf("NORMAL").getUserState());
-            userInfo.setUserInfoState(userInfo.checkInfoState(userInfo));
-            userInfo.setCreateTime(sdf.format(now));
-            userInfo.setUpdateTime(sdf.format(now));
-            int userId = userInfoMapper.insert(userInfo);
-            if (userId > 0){
-                out.setUserInfo(userInfo);
-                out.setCode(ReturnCode.SUCCESS);
-                out.setMsg(ReturnMsg.SUCCESS);
+        if ("1".equals(signInType)){
+            user = getUserInfo("","",input.getUserPhone());
+            if (user == null){
+                userInfo.setUserPhone(input.getUserPhone());
             }else{
-                out.setCode(ReturnCode.THE_USER_INSERT_FAIL);
-                out.setMsg(ReturnMsg.THE_USER_INSERT_FAIL);
-            }
-        }else {
-            if ("1".equals(signInType)){
                 out.setCode(ReturnCode.THE_PHONE_IS_EXIST);
                 out.setMsg(ReturnMsg.THE_PHONE_IS_EXIST);
-            }else {
+                logger.info("UserServiceImpl-userAdd服务结束");
+                return out;
+            }
+        }else {
+            user = getUserInfo("",input.getUserAccount(),"");
+            if (user == null){
+                userInfo.setUserAccount(input.getUserAccount());
+            }else{
                 out.setCode(ReturnCode.THE_ACCOUNT_IS_EXIST);
                 out.setMsg(ReturnMsg.THE_ACCOUNT_IS_EXIST);
+                logger.info("UserServiceImpl-userAdd服务结束");
+                return out;
             }
         }
-        out.setTranSeq(input.getTranSeq());
+        //密码公钥加密、后期放入前端处理
+        if (input.getUserPassword() != null && input.getUserPassword() != ""){
+            String rsaPublicKey = rb.getString("RSAPublicKey");
+            byte[] passwordByte = input.getUserPassword().getBytes();
+            byte[] encodedData = new byte[0];
+            try {
+                encodedData = RSACoder.encryptByPublicKey(passwordByte, rsaPublicKey);
+            } catch (Exception e) {
+                logger.error("UserServiceImpl-userAdd密码加密失败");
+                e.printStackTrace();
+            }
+            //byte转String
+            BASE64Encoder enc=new BASE64Encoder();
+            String encrypt=enc.encode(encodedData);
+            System.out.println("encrypt:"+encrypt);
+            userInfo.setUserPassword(encrypt);
+        }
+
+        if (input.getUserName() != null && input.getUserName() != ""){
+            userInfo.setUserName(input.getUserName());
+        }
+        if (input.getUserAge() != null && input.getUserAge() != ""){
+            userInfo.setUserAge(input.getUserAge());
+        }
+        if (input.getUserSex() != null && input.getUserSex() != ""){
+            userInfo.setUserSex(input.getUserSex());
+        }
+        if (input.getUserOpenid() != null && input.getUserOpenid() != ""){
+            userInfo.setUserOpenid(input.getUserOpenid());
+        }
+        userInfo.setUserRoleId(2);
+        userInfo.setPasswordErrTime("0");
+        userInfo.setUserState(UserState.valueOf("NORMAL").getUserState());
+        userInfo.setUserInfoState(userInfo.checkInfoState(userInfo));
+        userInfo.setCreateTime(sdf.format(now));
+        userInfo.setUpdateTime(sdf.format(now));
+        int userId = userInfoMapper.insert(userInfo);
+        if (userId > 0){
+            out.setUserInfo(userInfo);
+            out.setCode(ReturnCode.SUCCESS);
+            out.setMsg(ReturnMsg.SUCCESS);
+        }else{
+            out.setCode(ReturnCode.THE_USER_INSERT_FAIL);
+            out.setMsg(ReturnMsg.THE_USER_INSERT_FAIL);
+        }
         logger.info("UserServiceImpl-userAdd服务结束");
         return out;
     }
@@ -124,11 +122,10 @@ public class UserServiceImpl implements UserService {
         UpdateUserInfoImplOutput out = new UpdateUserInfoImplOutput();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
-        UserInfo userInfo = getUserInfo(input.getUserAccount(),input.getOldUserPhone());
+        UserInfo userInfo = getUserInfo(input.getUserId(),"","");
         if (userInfo == null){
             out.setCode(ReturnCode.THE_USER_IS_NOT_EXIST);
             out.setMsg(ReturnMsg.THE_USER_IS_NOT_EXIST);
-            out.setTranSeq(input.getTranSeq());
             logger.info("UserServiceImpl-updateUserInfo服务结束");
             return out;
         }
@@ -168,7 +165,6 @@ public class UserServiceImpl implements UserService {
                 out.setMsg(ReturnMsg.SUCCESS);
         }
         out.setUserInfo(userInfo);
-        out.setTranSeq(input.getTranSeq());
         logger.info("UserServiceImpl-updateUserInfo服务结束");
         return out;
     }
@@ -180,14 +176,13 @@ public class UserServiceImpl implements UserService {
         String userAccount = input.getUserAccount();
         String userPassword = input.getUserPassword();
         String userPhone = input.getUserPhone();
-        UserInfo user = getUserInfo(userAccount,userPhone);
+        UserInfo user = getUserInfo("",userAccount,userPhone);
         if (user!=null){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date now = new Date();
             if (!user.getUserState().equals(UserState.valueOf("NORMAL").getUserState())){
                 out.setCode(ReturnCode.THE_STATE_ABNORMAL);
                 out.setMsg(ReturnMsg.THE_STATE_ABNORMAL);
-                out.setTranSeq(input.getTranSeq());
                 logger.info("UserServiceImpl-login服务结束");
                 return out;
             }
@@ -226,7 +221,6 @@ public class UserServiceImpl implements UserService {
             out.setCode(ReturnCode.THE_USER_IS_NOT_EXIST);
             out.setMsg(ReturnMsg.THE_USER_IS_NOT_EXIST);
         }
-        out.setTranSeq(input.getTranSeq());
         logger.info("UserServiceImpl-login服务结束");
         return out;
     }
@@ -234,12 +228,16 @@ public class UserServiceImpl implements UserService {
     /**
      * 传入账号、手机号获取用户信息
      */
-    public UserInfo getUserInfo(String userAccount, String userPhone){
+    public UserInfo getUserInfo(String userId,String userAccount, String userPhone){
         UserInfo userInfo = new UserInfo();
-        if (userAccount == null||userAccount == ""){
-            userInfo.setUserPhone(userPhone);
-        }else{
+        if (userId != null && userId!=""){
+            userInfo.setUserId(Integer.valueOf(userId));
+        }
+        if (userAccount != null && userAccount!=""){
             userInfo.setUserAccount(userAccount);
+        }
+        if (userPhone != null && userPhone!=""){
+            userInfo.setUserPhone(userPhone);
         }
         userInfo = userInfoMapper.selectOne(userInfo);
         return userInfo;

@@ -17,6 +17,10 @@ public class UpdateUserInfoImplInput extends ServiceCommonInput {
      **/
     private String updateType;
     /**
+     * 用户id
+     **/
+    private String userId;
+    /**
      * 用户账号
      **/
     private String userAccount;
