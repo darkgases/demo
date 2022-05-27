@@ -27,4 +27,9 @@ public class sysLogServiceImpl implements SysLogService {
     public void save(TranList input) {
         tranListMapper.insert(input);
     }
+
+    @Override
+    public void update(TranList input) {
+        tranListMapper.updateByTranSeq(input);
+    }
 }

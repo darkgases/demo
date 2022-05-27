@@ -1,6 +1,7 @@
 package com.example.cn.vx.demo.service.user.api;
 
 import com.example.cn.vx.demo.common.ServiceCommonOutput;
+import com.example.cn.vx.demo.entity.UserInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,4 +12,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserAddImplOutput extends ServiceCommonOutput {
+    private UserInfo userInfo;
 }

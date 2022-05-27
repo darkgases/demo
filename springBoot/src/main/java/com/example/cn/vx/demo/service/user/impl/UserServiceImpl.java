@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    ResourceBundle rb = ResourceBundle.getBundle("customizeParam");
+    ResourceBundle rb = ResourceBundle.getBundle("static/customizeParam");
 
     @Override
     public UserAddImplOutput userAdd(UserAddImplInput input){
@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
             userInfo.setUpdateTime(sdf.format(now));
             int userId = userInfoMapper.insert(userInfo);
             if (userId > 0){
+                out.setUserInfo(userInfo);
                 out.setCode(ReturnCode.SUCCESS);
                 out.setMsg(ReturnMsg.SUCCESS);
             }else{

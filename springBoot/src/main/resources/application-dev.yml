@@ -32,18 +32,21 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   # 别名，简化 mapper.xml 中请求响应参数类型
   type-aliases-package: com.hirain.entity
-  configuration:
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+  #configuration与configLocation不能同时启用
+  #configuration:
     #开启驼峰映射
-    map-underscore-to-camel-case: true
+    #map-underscore-to-camel-case: true
     # sql日志的打印 (与logging-level-com.xxx.com.dao.mapper选择一项即可)
     # StdOutImpl会打印sql，但是同时多出其他日志
     # Slf4jImpl不会打印sql
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     # log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
-    #logging:
-  # level:
-    # com.example.cn.vx.demo.mapper: debug
+#logging:
+  #level:
+    #com.example.cn.vx.demo.mapper: debug
     #file:
     #指定日志文件生成的位置
     #name: D:/home/learn/vx/spring.log

@@ -13,4 +13,6 @@ public interface TranListMapper {
     List<TranList> selectAll();
 
     int updateByPrimaryKey(TranList record);
+
+    int updateByTranSeq(TranList record);
 }

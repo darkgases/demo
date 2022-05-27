@@ -54,10 +54,4 @@ public class UserAddImplInput extends ServiceCommonInput {
      **/
     private String updateTime;
 
-    public UserAddImplInput(){
-        String tranSeq = CommonUtil.getTranSeq();
-        super.setTranSeq(tranSeq);
-        super.setTranDate(tranSeq.substring(0,8));
-        super.setTranTime(tranSeq.substring(8,14));
-    }
 }

@@ -12,10 +12,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class GetPublicKeyImplInput extends ServiceCommonInput {
-    public GetPublicKeyImplInput(){
-        String tranSeq = CommonUtil.getTranSeq();
-        super.setTranSeq(tranSeq);
-        super.setTranDate(tranSeq.substring(0,8));
-        super.setTranTime(tranSeq.substring(8,14));
-    }
+
 }

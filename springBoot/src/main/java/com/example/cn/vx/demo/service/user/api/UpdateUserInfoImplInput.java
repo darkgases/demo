@@ -57,11 +57,5 @@ public class UpdateUserInfoImplInput extends ServiceCommonInput {
      **/
     private String updateTime;
 
-    public UpdateUserInfoImplInput(){
-        String tranSeq = CommonUtil.getTranSeq();
-        super.setTranSeq(tranSeq);
-        super.setTranDate(tranSeq.substring(0,8));
-        super.setTranTime(tranSeq.substring(8,14));
-    }
 }
 

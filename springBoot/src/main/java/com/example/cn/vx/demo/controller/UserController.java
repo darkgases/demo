@@ -1,10 +1,10 @@
 package com.example.cn.vx.demo.controller;
 
-import com.example.cn.vx.demo.common.aop.MyLog;
 import com.example.cn.vx.demo.common.ReturnCode;
 import com.example.cn.vx.demo.common.ReturnMsg;
-import com.example.cn.vx.demo.service.user.api.*;
+import com.example.cn.vx.demo.common.aop.MyLog;
 import com.example.cn.vx.demo.service.user.UserService;
+import com.example.cn.vx.demo.service.user.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,11 @@ public class UserController {
     @Autowired
     public  UserService userService;
 
-    public ResourceBundle rb = ResourceBundle.getBundle("customizeParam");
+    public ResourceBundle rb = ResourceBundle.getBundle("static/customizeParam");
 
     public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    @MyLog(value = "注册")
     @RequestMapping("/userAdd")
     public UserAddImplOutput userAdd(HttpServletRequest request){
         logger.info("UserController:userAdd开始");
@@ -49,13 +50,24 @@ public class UserController {
             logger.info("UserController:userAdd结束");
             return output;
         }
-        if (userAccount == null || userAccount == ""){
+        if ("1".equals(signInType)){
+            //手机号注册
             if (userPhone == null || userPhone == ""){
                 output.setCode(ReturnCode.FAIL);
-                output.setMsg("账号手机号必须上传一项");
-                logger.info("UserController:userAdd结束");
+                output.setMsg("手机号不能为空");
                 return output;
             }
+        }else if ("2".equals(signInType)){
+            //账号注册
+            if (userAccount == null || userAccount == ""){
+                output.setCode(ReturnCode.FAIL);
+                output.setMsg("账号不能为空");
+                return output;
+            }
+        }else {
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("无此注册渠道");
+            return output;
         }
         if (userPassword == null || userPassword == ""){
             output.setCode(ReturnCode.FAIL);
@@ -64,8 +76,8 @@ public class UserController {
             return output;
         }
         input.setSignInType(signInType);
-        input.setUserAccount(userAccount);
         input.setUserPassword(userPassword);
+        input.setUserAccount(userAccount);
         input.setUserPhone(userPhone);
         input.setUserName(userName);
         input.setUserAge(userAge);
@@ -95,7 +107,7 @@ public class UserController {
         return output;
     }
 
-    @MyLog(value = "登陆")
+    @MyLog(value = "更新用户信息")
     @RequestMapping("/updateUserInfo")
     public UpdateUserInfoImplOutput updateUserInfo(HttpServletRequest request){
         logger.info("UserController:updateUserInfo开始");
@@ -127,6 +139,7 @@ public class UserController {
         return output;
     }
 
+    @MyLog(value = "获取公钥")
     @RequestMapping("/getPublicKey")
     public GetPublicKeyImplOutput getPublicKeyInfo(HttpServletRequest request){
         logger.info("UserController:updateUserInfo开始");

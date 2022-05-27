@@ -25,10 +25,4 @@ public class LoginImplInput extends ServiceCommonInput {
      **/
     private String userPassword;
 
-    public LoginImplInput(){
-        String tranSeq = CommonUtil.getTranSeq();
-        super.setTranSeq(tranSeq);
-        super.setTranDate(tranSeq.substring(0,8));
-        super.setTranTime(tranSeq.substring(8,14));
-    }
 }
