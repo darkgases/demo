@@ -48,7 +48,10 @@
 
   <update id="updateByTranSeq" parameterType="com.example.cn.vx.demo.entity.TranList" >
     update tran_list
-    set user_id = #{userId,jdbcType=INTEGER},
+    set
+    <if test="userId != null and userId != 0">
+      user_id = #{userId,jdbcType=INTEGER},
+    </if>
       host_code = #{hostCode,jdbcType=VARCHAR},
       host_msg = #{hostMsg,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=VARCHAR}
