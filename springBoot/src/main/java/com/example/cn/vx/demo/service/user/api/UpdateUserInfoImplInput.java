@@ -17,6 +17,10 @@ public class UpdateUserInfoImplInput extends ServiceCommonInput {
      **/
     private String updateType;
     /**
+     * 用户id
+     **/
+    private String userId;
+    /**
      * 用户账号
      **/
     private String userAccount;
@@ -57,11 +61,5 @@ public class UpdateUserInfoImplInput extends ServiceCommonInput {
      **/
     private String updateTime;
 
-    public UpdateUserInfoImplInput(){
-        String tranSeq = CommonUtil.getTranSeq();
-        super.setTranSeq(tranSeq);
-        super.setTranDate(tranSeq.substring(0,8));
-        super.setTranTime(tranSeq.substring(8,14));
-    }
 }
 

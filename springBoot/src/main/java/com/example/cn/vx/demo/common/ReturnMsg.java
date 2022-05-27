@@ -23,4 +23,6 @@ public class ReturnMsg {
 
     public static final String THE_STATE_ABNORMAL = "账户状态异常,请联系管理员";
 
+    public static final String SystemErr = "系统异常";
+
 }

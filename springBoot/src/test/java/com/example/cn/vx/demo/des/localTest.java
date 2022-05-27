@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  * @Date: 2022/05/24 16:50
  */
 public class localTest {
-    private ResourceBundle rb = ResourceBundle.getBundle("customizeParam");
+    private ResourceBundle rb = ResourceBundle.getBundle("static/customizeParam");
 
     @Test
     public void test() throws Exception {
