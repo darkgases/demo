@@ -4,10 +4,12 @@ import com.example.cn.vx.demo.common.ReturnCode;
 import com.example.cn.vx.demo.common.ReturnMsg;
 import com.example.cn.vx.demo.common.des.RSACoder;
 import com.example.cn.vx.demo.common.enums.UserState;
+import com.example.cn.vx.demo.common.until.CommonUtil;
 import com.example.cn.vx.demo.entity.UserInfo;
 import com.example.cn.vx.demo.mapper.UserInfoMapper;
 import com.example.cn.vx.demo.service.user.UserService;
 import com.example.cn.vx.demo.service.user.api.*;
+import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,21 +70,24 @@ public class UserServiceImpl implements UserService {
             }
         }
         //密码公钥加密、后期放入前端处理
+//        if (input.getUserPassword() != null && input.getUserPassword() != ""){
+//            String rsaPublicKey = rb.getString("RSAPublicKey");
+//            byte[] passwordByte = input.getUserPassword().getBytes();
+//            byte[] encodedData = new byte[0];
+//            try {
+//                encodedData = RSACoder.encryptByPublicKey(passwordByte, rsaPublicKey);
+//            } catch (Exception e) {
+//                logger.error("UserServiceImpl-userAdd密码加密失败");
+//                e.printStackTrace();
+//            }
+//            //byte转String
+//            BASE64Encoder enc=new BASE64Encoder();
+//            String encrypt=enc.encode(encodedData);
+//            System.out.println("encrypt:"+encrypt);
+//            userInfo.setUserPassword(encrypt);
+//        }
         if (input.getUserPassword() != null && input.getUserPassword() != ""){
-            String rsaPublicKey = rb.getString("RSAPublicKey");
-            byte[] passwordByte = input.getUserPassword().getBytes();
-            byte[] encodedData = new byte[0];
-            try {
-                encodedData = RSACoder.encryptByPublicKey(passwordByte, rsaPublicKey);
-            } catch (Exception e) {
-                logger.error("UserServiceImpl-userAdd密码加密失败");
-                e.printStackTrace();
-            }
-            //byte转String
-            BASE64Encoder enc=new BASE64Encoder();
-            String encrypt=enc.encode(encodedData);
-            System.out.println("encrypt:"+encrypt);
-            userInfo.setUserPassword(encrypt);
+            userInfo.setUserPassword(input.getUserPassword());
         }
 
         if (input.getUserName() != null && input.getUserName() != ""){
@@ -196,6 +201,10 @@ public class UserServiceImpl implements UserService {
                 e.printStackTrace();
             }
             if (check){
+                user.setUpdateTime(sdf.format(now));
+                user.setPasswordErrTime("0");
+                user.setUserOpenid(input.getUserOpenId());
+                userInfoMapper.updateByPrimaryKey(user);
                 out.setCode(ReturnCode.SUCCESS);
                 out.setMsg(ReturnMsg.SUCCESS);
                 out.setUserInfo(user);
@@ -235,9 +244,10 @@ public class UserServiceImpl implements UserService {
         }
         if (userAccount != null && userAccount!=""){
             userInfo.setUserAccount(userAccount);
-        }
-        if (userPhone != null && userPhone!=""){
-            userInfo.setUserPhone(userPhone);
+        }else {
+            if (userPhone != null && userPhone != "") {
+                userInfo.setUserPhone(userPhone);
+            }
         }
         userInfo = userInfoMapper.selectOne(userInfo);
         return userInfo;
@@ -260,7 +270,7 @@ public class UserServiceImpl implements UserService {
         }
         //私钥解密
         byte[] dbByteDec = RSACoder.decryptByPrivateKey(dbByte, rsaPrivateKey);
-        byte[] paramByteDec = RSACoder.decryptByPrivateKey(dbByte, rsaPrivateKey);
+        byte[] paramByteDec = RSACoder.decryptByPrivateKey(paramByte, rsaPrivateKey);
         //byte转String
         BASE64Encoder enc=new BASE64Encoder();
         //数据库存储、解密后的内容
@@ -275,5 +285,29 @@ public class UserServiceImpl implements UserService {
             check = true;
         }
         return check;
+    }
+
+    @Override
+    public GetOpenIdOutput getOpenId(GetOpenIdInput input){
+        GetOpenIdOutput out = new GetOpenIdOutput();
+        String requestUrl = rb.getString("sendMsgToGetOpenId");
+        String appId = rb.getString("appId");
+        String appSecret = rb.getString("appSecret");
+        String authorization_code = rb.getString("authorization_code");
+        String code = input.getCode();
+        requestUrl = requestUrl.replace("APPID",appId).replace("SECRET",appSecret).replace("JSCODE",code);
+        String openid="";
+        JSONObject jsonObject = CommonUtil.httpsRequest(requestUrl, "GET", null);
+        if(null != jsonObject){
+            openid = (String) jsonObject.get("openid");
+            out.setCode(ReturnCode.SUCCESS);
+            out.setMsg("获取openId成功");
+            out.setOpenId(openid);
+        }else{
+            out.setCode(ReturnCode.FAIL);
+            out.setMsg("获取openId失败");
+            out.setOpenId(openid);
+        }
+        return out;
     }
 }

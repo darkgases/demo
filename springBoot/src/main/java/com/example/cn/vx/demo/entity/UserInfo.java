@@ -5,6 +5,7 @@ import com.example.cn.vx.demo.common.enums.UserInfoState;
 import java.io.Serializable;
 
 public class UserInfo implements Serializable {
+
     private Integer userId;
 
     private Integer userRoleId;

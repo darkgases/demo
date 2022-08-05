@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.cn.vx.demo.mapper.AlbumInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.example.cn.vx.demo.entity.AlbumInfo" >
+    <id column="album_id" property="albumId" jdbcType="INTEGER" />
+    <result column="album_name" property="albumName" jdbcType="VARCHAR" />
+    <result column="album_describe" property="albumDescribe" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Table_Name">
+		T_ETC_PAY_LIST
+  </sql>
+
+  <sql id="Base_Column">
+      album_id,album_name,album_describe,create_time,update_time
+  </sql>
+
+  <sql id="Base_Where">
+    <trim suffixOverrides="AND">
+      <if test="albumId != null">
+        album_id= #{albumId}
+        AND
+      </if>
+      <if test="albumName != null">
+        album_name= #{albumName}
+        AND
+      </if>
+    </trim>
+  </sql>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from album_info
+    where album_id = #{albumId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.cn.vx.demo.entity.AlbumInfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="albumId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into album_info (album_name, album_describe, create_time,
+      update_time)
+    values (#{albumName,jdbcType=VARCHAR}, #{albumDescribe,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.cn.vx.demo.entity.AlbumInfo" >
+    update album_info
+    set album_name = #{albumName,jdbcType=VARCHAR},
+      album_describe = #{albumDescribe,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=VARCHAR}
+    where album_id = #{albumId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select album_id, album_name, album_describe, create_time, update_time
+    from album_info
+    where album_id = #{albumId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select album_id, album_name, album_describe, create_time, update_time
+    from album_info
+  </select>
+
+  <sql id="Base_Select">
+    select
+    <include refid="Base_Column" />
+    from
+    <include refid="Table_Name" />
+    <where>
+      <include refid="Base_Where" />
+    </where>
+  </sql>
+
+  <select id="selectOne"  resultMap="BaseResultMap">
+    <include refid="Base_Select" />
+  </select>
+</mapper>
