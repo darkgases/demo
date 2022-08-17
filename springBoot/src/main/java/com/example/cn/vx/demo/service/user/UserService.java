@@ -28,4 +28,11 @@ public interface UserService {
      */
     UpdateUserInfoImplOutput updateUserInfo(UpdateUserInfoImplInput input);
 
+    /**
+     * @param input
+     * @return
+     * @ps:获取openId
+     */
+    GetOpenIdOutput getOpenId(GetOpenIdInput input);
+
 }

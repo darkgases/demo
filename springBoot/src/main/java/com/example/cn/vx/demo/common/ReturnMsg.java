@@ -25,4 +25,18 @@ public class ReturnMsg {
 
     public static final String SystemErr = "系统异常";
 
+    public static final String THE_ALBUM_IS_NOT_EXIST = "该相册不存在";
+
+    public static final String THE_ALBUM_IS_EXIST = "该相册已存在";
+
+    public static final String CREATE_ALBUM_FAIL = "相册创建失败";
+
+    public static final String CREATE_USER_ALBUM_INFO_FAIL = "用户-相册关联关系创建失败";
+
+    public static final String THE_ALBUM_NOT_BELONG_TO_THIS_USER = "该用户无操作次相册权限";
+
+    public static final String ALREADY_HAS_MAX_ALBUM_NUM = "已经达到允许创建的最大相册数量";
+
+    public static final String USER_ALBUM_IS_NULL = "未拥有相册";
+
 }

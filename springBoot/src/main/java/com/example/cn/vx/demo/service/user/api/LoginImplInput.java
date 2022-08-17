@@ -24,5 +24,9 @@ public class LoginImplInput extends ServiceCommonInput {
      * 用户密码
      **/
     private String userPassword;
+    /**
+     * 用户OpenId
+     **/
+    private String userOpenId;
 
 }

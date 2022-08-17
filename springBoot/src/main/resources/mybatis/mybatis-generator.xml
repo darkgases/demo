@@ -53,14 +53,35 @@
         <javaClientGenerator targetPackage="com.example.cn.vx.demo.mapper" targetProject="src/main/java" type="XMLMAPPER" >
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
-
+        <!--
         <table tableName="user_info" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <generatedKey column="user_id" sqlStatement="Mysql" identity="true" />
         </table>
-
+        -->
+        <!--
         <table tableName="user_role" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
             <generatedKey column="user_role_id" sqlStatement="Mysql" identity="true" />
         </table>
+        -->
+        <!--<table tableName="album_info" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
+            <!--<generatedKey column="album_id" sqlStatement="Mysql" identity="true" />-->
+        <!--</table>-->
+
+        <table tableName="photo_info" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+            <generatedKey column="photo_id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+        <!--<table tableName="user_album_info" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
+            <!--<generatedKey column="user_id" sqlStatement="Mysql" identity="true" />-->
+        <!--</table>-->
+
+        <!--<table tableName="user_self_album" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
+            <!--<generatedKey column="user_id" sqlStatement="Mysql" identity="true" />-->
+        <!--</table>-->
+
+        <!--<table tableName="user_other_album" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
+            <!--<generatedKey column="user_id" sqlStatement="Mysql" identity="true" />-->
+        <!--</table>-->
 
     </context>
 </generatorConfiguration>

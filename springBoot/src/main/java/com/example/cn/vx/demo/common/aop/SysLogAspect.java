@@ -2,7 +2,6 @@ package com.example.cn.vx.demo.common.aop;
 
 import com.example.cn.vx.demo.common.ReturnCode;
 import com.example.cn.vx.demo.common.ReturnMsg;
-import com.example.cn.vx.demo.common.ServiceCommonInput;
 import com.example.cn.vx.demo.common.ServiceCommonOutput;
 import com.example.cn.vx.demo.common.until.CommonUtil;
 import com.example.cn.vx.demo.entity.TranList;
@@ -17,13 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 系统日志：切面处理类
@@ -88,11 +88,23 @@ public class SysLogAspect {
         Object[] arguments = new Object[args.length];
         for (int i = 0; i < args.length; i++) {
             arguments[i] = args[i];
-            Map<String, String[]> linkMap = ((StandardMultipartHttpServletRequest) args[0]).getParameterMap();
+            Map<String, String[]> linkMap = null;
+            try {
+                linkMap = (Map<String, String[]>) args[0];
+//                Set<Map.Entry<String, String[]>> entries = linkMap.entrySet();
+//                for (Map.Entry<String, String[]> entry : entries) {
+//                    System.out.println("key:"+entry.getKey()+"\t"+"value:"+entry.getValue());
+//                    String sss = String.valueOf(entry.getValue());
+//                }
+            }catch (ClassCastException e){
+                logger.info("切面-请求参数为空，强转失败StandardMultipartHttpServletRequest");
+                continue;
+            }
             if (linkMap.size()>0){
                 for (Map.Entry<String,String[]> entry : linkMap.entrySet()){
-                    if ("userId".equals(entry.getKey()) && entry.getValue()[0]!=null && !("").equals(entry.getValue()[0])){
-                        sysLog.setUserId(Integer.valueOf(entry.getValue()[0]));
+                    String value = String.valueOf(entry.getValue());
+                    if ("userId".equals(entry.getKey()) && value!=null && !("[]").equals(value)){
+                        sysLog.setUserId(Integer.valueOf(value.substring(1,value.lastIndexOf("]"))));
                     }
                     if ("hostIp".equals(entry.getKey())){
                         sysLog.setHostIp((entry.getValue()[0]));
@@ -131,8 +143,11 @@ public class SysLogAspect {
             }
         }
         sysLog.setHostCode(((ServiceCommonOutput) returnValue).getCode());
-        sysLog.setHostMsg(((ServiceCommonOutput) returnValue).getMsg());
-
+        if (((ServiceCommonOutput) returnValue).getMsg()!=null && ((ServiceCommonOutput) returnValue).getMsg().length()>256){
+            sysLog.setHostMsg(((ServiceCommonOutput) returnValue).getMsg().substring(0,128));
+        }else{
+            sysLog.setHostMsg(((ServiceCommonOutput) returnValue).getMsg());
+        }
         Date now = new Date();
         sysLog.setUpdateTime(sdf.format(now));
         sysLog.setTranSeq(tranSeq);

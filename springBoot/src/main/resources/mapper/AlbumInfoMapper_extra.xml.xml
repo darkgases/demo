@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cn.vx.demo.mapper.AlbumInfoMapper">
+    <resultMap id="UserOwnAlbumListResultMap" type="com.example.cn.vx.demo.entity.AlbumInfoList">
+        <id column="user_id" jdbcType="INTEGER" property="userId" />
+        <id column="album_id" jdbcType="INTEGER" property="albumId" />
+        <result column="album_name" jdbcType="VARCHAR" property="albumName" />
+        <result column="album_describe" jdbcType="VARCHAR" property="albumDescribe" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+        <result column="update_time" jdbcType="VARCHAR" property="updateTime" />
+        <result column="album_state" jdbcType="VARCHAR" property="albumState" />
+    </resultMap>
+
+    <select id="selectUserOwnAlbumList" parameterType="java.util.HashMap" resultMap="UserOwnAlbumListResultMap">
+        select
+        *
+        from
+        user_self_album self ,album_info album
+        where
+        self.album_id = album.album_id and album.album_state = '0'
+        <if test='userId != null and userId != "" and userId != 0'>
+            AND self.user_id= #{userId}
+        </if>
+        <if test='albumName != null and albumName != ""'>
+            AND self.album_name= #{albumName}
+        </if>
+    </select>
+</mapper>

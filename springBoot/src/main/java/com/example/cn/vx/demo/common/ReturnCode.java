@@ -25,4 +25,17 @@ public class ReturnCode {
 
     public static final String SystemErr = "100008";
 
+    public static final String THE_ALBUM_IS_NOT_EXIST = "2000001";
+
+    public static final String THE_ALBUM_IS_EXIST = "2000002";
+
+    public static final String CREATE_ALBUM_FAIL = "2000003";
+
+    public static final String CREATE_USER_ALBUM_INFO_FAIL = "2000004";
+
+    public static final String THE_ALBUM_NOT_BELONG_TO_THIS_USER = "2000005";
+
+    public static final String ALREADY_HAS_MAX_ALBUM_NUM = "2000006";
+
+    public static final String USER_ALBUM_IS_NULL = "2000007";
 }
