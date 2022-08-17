@@ -143,8 +143,11 @@ public class SysLogAspect {
             }
         }
         sysLog.setHostCode(((ServiceCommonOutput) returnValue).getCode());
-        sysLog.setHostMsg(((ServiceCommonOutput) returnValue).getMsg());
-
+        if (((ServiceCommonOutput) returnValue).getMsg()!=null && ((ServiceCommonOutput) returnValue).getMsg().length()>256){
+            sysLog.setHostMsg(((ServiceCommonOutput) returnValue).getMsg().substring(0,128));
+        }else{
+            sysLog.setHostMsg(((ServiceCommonOutput) returnValue).getMsg());
+        }
         Date now = new Date();
         sysLog.setUpdateTime(sdf.format(now));
         sysLog.setTranSeq(tranSeq);

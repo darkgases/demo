@@ -14,8 +14,8 @@
     <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into user_album_info (self_album_id, other_album_id)
-    values (#{selfAlbumId,jdbcType=VARCHAR}, #{otherAlbumId,jdbcType=VARCHAR})
+    insert into user_album_info (user_id,self_album_id, other_album_id)
+    values (#{userId,jdbcType=INTEGER},#{selfAlbumId,jdbcType=VARCHAR}, #{otherAlbumId,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.example.cn.vx.demo.entity.UserAlbumInfo" >
     update user_album_info

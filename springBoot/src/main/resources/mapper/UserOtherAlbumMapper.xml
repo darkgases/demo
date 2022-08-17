@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cn.vx.demo.mapper.UserOtherAlbumMapper">
+  <resultMap id="BaseResultMap" type="com.example.cn.vx.demo.entity.UserOtherAlbum">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="other_album_id" jdbcType="INTEGER" property="otherAlbumId" />
+    <result column="other_user_id" jdbcType="INTEGER" property="otherUserId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_other_album
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.cn.vx.demo.entity.UserOtherAlbum">
+    <selectKey keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_other_album (id, user_id,other_album_id, other_user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{otherAlbumId,jdbcType=INTEGER}, #{otherUserId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.cn.vx.demo.entity.UserOtherAlbum">
+    update user_other_album
+    set user_id = #{userId,jdbcType=INTEGER},
+      other_album_id = #{otherAlbumId,jdbcType=INTEGER},
+      other_user_id = #{otherUserId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, user_id, other_album_id, other_user_id
+    from user_other_album
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, user_id, other_album_id, other_user_id
+    from user_other_album
+  </select>
+
+
+
+
+
+
+  <sql id="Table_Name">
+		user_other_album
+  </sql>
+
+  <sql id="Base_Column">
+		id,
+		user_id,
+		other_album_id,
+		other_user_id
+	</sql>
+
+  <sql id="Base_Where">
+    <trim suffixOverrides="AND">
+      <if test="id != null and id != 0">
+        id= #{id}
+        AND
+      </if>
+      <if test="userId != null and userId != 0">
+        user_id= #{userId}
+        AND
+      </if>
+      <if test="otherAlbumId != null and otherAlbumId != 0">
+        other_album_id= #{otherAlbumId}
+        AND
+      </if>
+      <if test="otherUserId != null and otherUserId != 0">
+        other_user_id= #{otherUserId}
+        AND
+      </if>
+    </trim>
+  </sql>
+  <sql id="Base_Select">
+    select
+    <include refid="Base_Column" />
+    from
+    <include refid="Table_Name" />
+    <where>
+      <include refid="Base_Where" />
+    </where>
+  </sql>
+
+  <select id="selectOne" resultMap="BaseResultMap">
+  <include refid="Base_Select" />
+</select>
+
+  <select id="selectByParam" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column" />
+    from
+    <include refid="Table_Name" />
+    where 1=1
+    <if test='userId != null and userId != "" and userId != 0'>
+      AND user_id= #{userId}
+    </if>
+    <if test='otherAlbumId != null and otherAlbumId != "" and otherAlbumId != 0'>
+      AND other_album_id= #{otherAlbumId}
+    </if>
+    <if test='otherUserId != null and otherUserId != "" and otherUserId != 0'>
+      AND other_user_id= #{otherUserId}
+    </if>
+  </select>
+
+  <delete id="deleteByParam" parameterType="java.util.HashMap">
+    delete
+    from
+    <include refid="Table_Name" />
+    where 1=1
+    <if test='id != null and id != ""'>
+      AND id= #{id}
+    </if>
+    <if test='userId != null and userId != "" and userId != 0'>
+      AND user_id= #{userId}
+    </if>
+    <if test='otherAlbumId != null and otherAlbumId != "" and otherAlbumId != 0'>
+      AND other_album_id= #{otherAlbumId}
+    </if>
+    <if test='otherUserId != null and otherUserId != "" and otherUserId != 0'>
+      AND other_user_id= #{otherUserId}
+    </if>
+  </delete>
+</mapper>

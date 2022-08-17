@@ -1,9 +1,10 @@
 package com.example.cn.vx.demo.controller;
 
+import com.example.cn.vx.demo.common.ReturnCode;
+import com.example.cn.vx.demo.common.ReturnMsg;
 import com.example.cn.vx.demo.common.aop.MyLog;
 import com.example.cn.vx.demo.service.phone.PhoneService;
-import com.example.cn.vx.demo.service.phone.api.AddAlbumInput;
-import com.example.cn.vx.demo.service.phone.api.AddAlbumOutput;
+import com.example.cn.vx.demo.service.phone.api.*;
 import com.example.cn.vx.demo.service.user.api.UserAddImplOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +35,17 @@ public class PhoneController {
         logger.info("PhoneController:addAlbum开始");
         AddAlbumInput input = new AddAlbumInput();
         AddAlbumOutput output = new AddAlbumOutput();
+        List<String> userId = values.get("userId");
         List<String> albumName = values.get("albumName");
         List<String> albumDescribe = values.get("albumDescribe");
+        if (!checkNull(userId)){
+            input.setUserId(userId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("新建相册：用户ID不能为空");
+            logger.info("PhoneController:addAlbum结束");
+            return output;
+        }
         if (!checkNull(albumName)){
             input.setAlbumName(albumName.get(0));
         }
@@ -44,6 +54,154 @@ public class PhoneController {
         }
         output = phoneService.addAlbum(input);
         logger.info("PhoneController:addAlbum结束");
+        return output;
+    }
+
+    @MyLog(value = "修改相册")
+    @RequestMapping("/updateAlbum")
+    public UpdateAlbumOutput updateAlbum(@RequestBody MultiValueMap< String, String > values){
+        logger.info("PhoneController:updateAlbum开始");
+        UpdateAlbumInput input = new UpdateAlbumInput();
+        UpdateAlbumOutput output = new UpdateAlbumOutput();
+        List<String> userId = values.get("userId");
+        List<String> albumId = values.get("albumId");
+        List<String> albumName = values.get("albumName");
+        List<String> albumDescribe = values.get("albumDescribe");
+        if (!checkNull(userId)){
+            input.setUserId(userId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("修改相册：用户ID不能为空");
+            logger.info("PhoneController:updateAlbum结束");
+            return output;
+        }
+        if (!checkNull(albumId)){
+            input.setAlbumId(albumId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("修改相册：相册ID不能为空");
+            logger.info("PhoneController:updateAlbum结束");
+            return output;
+        }
+        if (!checkNull(albumName)){
+            input.setAlbumName(albumName.get(0));
+        }
+        if (!checkNull(albumDescribe)){
+            input.setAlbumDescribe(albumDescribe.get(0));
+        }
+        output = phoneService.updateAlbum(input);
+        logger.info("PhoneController:updateAlbum结束");
+        return output;
+    }
+
+    @MyLog(value = "删除相册")
+    @RequestMapping("/deleteAlbum")
+    public DeleteAlbumOutput deleteAlbum(@RequestBody MultiValueMap< String, String > values){
+        logger.info("PhoneController:deleteAlbum开始");
+        DeleteAlbumInput input = new DeleteAlbumInput();
+        DeleteAlbumOutput output = new DeleteAlbumOutput();
+        List<String> userId = values.get("userId");
+        List<String> albumId = values.get("albumId");
+        if (!checkNull(userId)){
+            input.setUserId(userId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("删除相册：用户ID不能为空");
+            logger.info("PhoneController:deleteAlbum结束");
+            return output;
+        }
+        if (!checkNull(albumId)){
+            input.setAlbumId(albumId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("删除相册：相册ID不能为空");
+            logger.info("PhoneController:deleteAlbum结束");
+            return output;
+        }
+        output = phoneService.daleteAlbum(input);
+        logger.info("PhoneController:updateAlbum结束");
+        return output;
+    }
+
+    @MyLog(value = "对用户分享相册")
+    @RequestMapping("/shareAlbum")
+    public ShareAlbumOutput shareAlbum(@RequestBody MultiValueMap< String, String > values){
+        logger.info("PhoneController:shareAlbum开始");
+        ShareAlbumOutput output = new ShareAlbumOutput();
+        ShareAlbumInput input = new ShareAlbumInput();
+        List<String> userId = values.get("userId");
+        List<String> albumId = values.get("albumId");
+        List<String> shareUserId = values.get("shareUserId");
+        if (!checkNull(userId)){
+            input.setUserId(userId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("分享相册：用户ID不能为空");
+            logger.info("PhoneController:shareAlbum结束");
+            return output;
+        }
+        if (!checkNull(albumId)){
+            input.setAlbumId(albumId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("分享相册：用户ID相册ID不能为空");
+            logger.info("PhoneController:shareAlbum结束");
+            return output;
+        }
+        if (!checkNull(shareUserId)){
+            input.setShareUserId(shareUserId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("分享相册：被分享用户ID不能为空");
+            logger.info("PhoneController:shareAlbum结束");
+            return output;
+        }
+        if (userId.get(0).equals(shareUserId.get(0))){
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("分享相册：无法对自己发起分享操作");
+            logger.info("PhoneController:shareAlbum结束");
+            return output;
+        }
+        output = phoneService.shareAlbum(input);
+        logger.info("PhoneController:shareAlbum结束");
+        return output;
+    }
+
+    @MyLog(value = "取消对用户分享相册")
+    @RequestMapping("/unShareAlbum")
+    public UnShareAlbumOutput unShareAlbum(@RequestBody MultiValueMap< String, String > values){
+        logger.info("PhoneController:unShareAlbum开始");
+        UnShareAlbumOutput output = new UnShareAlbumOutput();
+        UnShareAlbumInput input = new UnShareAlbumInput();
+        List<String> userId = values.get("userId");
+        List<String> albumId = values.get("albumId");
+        List<String> unShareUserId = values.get("unShareUserId");
+        if (!checkNull(userId)){
+            input.setUserId(userId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("取消对用户分享相册：用户ID不能为空");
+            logger.info("PhoneController:unShareAlbum结束");
+            return output;
+        }
+        if (!checkNull(albumId)){
+            input.setAlbumId(albumId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("取消对用户分享相册：用户ID相册ID不能为空");
+            logger.info("PhoneController:unShareAlbum结束");
+            return output;
+        }
+        if (!checkNull(unShareUserId)){
+            input.setUnShareUserId(unShareUserId.get(0));
+        }else{
+            output.setCode(ReturnCode.FAIL);
+            output.setMsg("取消对用户分享相册：被分享用户ID不能为空");
+            logger.info("PhoneController:unShareAlbum结束");
+            return output;
+        }
+        output = phoneService.unShareAlbum(input);
+        logger.info("PhoneController:unShareAlbum结束");
         return output;
     }
 }

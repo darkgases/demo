@@ -6,12 +6,12 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @author: dengshuai
- * @Date: 2022/08/04 15:51
+ * @Date: 2022/08/17 9:31
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AddAlbumInput extends ServiceCommonInput {
-    public String userId;
-    public String albumName;
-    public String albumDescribe;
+public class ShareAlbumInput extends ServiceCommonInput {
+    private String albumId;
+    private String userId;
+    private String shareUserId;
 }

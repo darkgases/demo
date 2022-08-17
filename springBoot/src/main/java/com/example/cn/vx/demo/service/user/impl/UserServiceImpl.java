@@ -225,6 +225,7 @@ public class UserServiceImpl implements UserService {
                     out.setCode(ReturnCode.THE_PASSWORD_ERROR);
                     out.setMsg(ReturnMsg.THE_PASSWORD_ERROR);
                 }
+                out.setUserInfo(user);
             }
         }else{
             out.setCode(ReturnCode.THE_USER_IS_NOT_EXIST);

@@ -13,6 +13,4 @@ public interface AlbumInfoMapper {
     List<AlbumInfo> selectAll();
 
     int updateByPrimaryKey(AlbumInfo record);
-
-    AlbumInfo selectOne(AlbumInfo albumInfo);
 }
