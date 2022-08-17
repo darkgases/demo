@@ -75,4 +75,14 @@
   <select id="selectOne" resultMap="BaseResultMap">
     <include refid="Base_Select" />
   </select>
+
+  <select id="selectByParam" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column" />
+    from
+    <include refid="Table_Name" />
+    <where>
+      <include refid="Base_Where" />
+    </where>
+  </select>
 </mapper>

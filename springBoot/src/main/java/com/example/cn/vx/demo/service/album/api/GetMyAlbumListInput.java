@@ -1,4 +1,4 @@
-package com.example.cn.vx.demo.service.phone.api;
+package com.example.cn.vx.demo.service.album.api;
 
 import com.example.cn.vx.demo.common.ServiceCommonInput;
 import lombok.Data;
@@ -6,12 +6,10 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @author: dengshuai
- * @Date: 2022/08/17 9:31
+ * @Date: 2022/08/17 16:22
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ShareAlbumInput extends ServiceCommonInput {
-    private String albumId;
+public class GetMyAlbumListInput extends ServiceCommonInput {
     private String userId;
-    private String shareUserId;
 }

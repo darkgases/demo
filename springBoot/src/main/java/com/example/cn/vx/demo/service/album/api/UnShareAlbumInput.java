@@ -1,4 +1,4 @@
-package com.example.cn.vx.demo.service.phone.api;
+package com.example.cn.vx.demo.service.album.api;
 
 import com.example.cn.vx.demo.common.ServiceCommonInput;
 import lombok.Data;

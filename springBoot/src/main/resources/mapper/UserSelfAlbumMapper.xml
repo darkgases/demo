@@ -110,4 +110,5 @@
       AND album_id= #{albumId}
     </if>
   </delete>
+
 </mapper>

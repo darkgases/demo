@@ -67,21 +67,21 @@
             <!--<generatedKey column="album_id" sqlStatement="Mysql" identity="true" />-->
         <!--</table>-->
 
-        <!--<table tableName="phone_info" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
-            <!--<generatedKey column="phone_id" sqlStatement="Mysql" identity="true" />-->
-        <!--</table>-->
+        <table tableName="photo_info" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+            <generatedKey column="photo_id" sqlStatement="Mysql" identity="true" />
+        </table>
 
         <!--<table tableName="user_album_info" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
             <!--<generatedKey column="user_id" sqlStatement="Mysql" identity="true" />-->
         <!--</table>-->
 
-        <table tableName="user_self_album" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-            <generatedKey column="user_id" sqlStatement="Mysql" identity="true" />
-        </table>
+        <!--<table tableName="user_self_album" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
+            <!--<generatedKey column="user_id" sqlStatement="Mysql" identity="true" />-->
+        <!--</table>-->
 
-        <table tableName="user_other_album" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-            <generatedKey column="user_id" sqlStatement="Mysql" identity="true" />
-        </table>
+        <!--<table tableName="user_other_album" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">-->
+            <!--<generatedKey column="user_id" sqlStatement="Mysql" identity="true" />-->
+        <!--</table>-->
 
     </context>
 </generatorConfiguration>

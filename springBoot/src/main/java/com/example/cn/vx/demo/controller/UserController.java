@@ -124,7 +124,7 @@ public class UserController {
         LoginImplInput  input = new LoginImplInput();
         LoginImplOutput output = new LoginImplOutput();
         List<String> userAccount = values.get("account");
-        List<String> userPhone = values.get("phone");
+        List<String> userPhone = values.get("album");
         List<String> userPassword = values.get("password");
         List<String> userOpenId = values.get("openId");
         if (checkNull(userAccount) && checkNull(userPhone)){

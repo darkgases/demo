@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.cn.vx.demo.mapper.PhotoInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.example.cn.vx.demo.entity.PhotoInfo" >
+    <id column="photo_id" property="photoId" jdbcType="INTEGER" />
+    <result column="album_id" property="albumId" jdbcType="INTEGER" />
+    <result column="photo_shumbnail_url" property="photoShumbnailUrl" jdbcType="VARCHAR" />
+    <result column="photo_original_url" property="photoOriginalUrl" jdbcType="VARCHAR" />
+    <result column="photo_praise_num" property="photoPraiseNum" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from photo_info
+    where photo_id = #{photoId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.cn.vx.demo.entity.PhotoInfo" >
+    <selectKey resultType="java.lang.Integer" keyProperty="photoId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into photo_info (album_id, photo_shumbnail_url, photo_original_url, 
+      photo_praise_num)
+    values (#{albumId,jdbcType=INTEGER}, #{photoShumbnailUrl,jdbcType=VARCHAR}, #{photoOriginalUrl,jdbcType=VARCHAR}, 
+      #{photoPraiseNum,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.cn.vx.demo.entity.PhotoInfo" >
+    update photo_info
+    set album_id = #{albumId,jdbcType=INTEGER},
+      photo_shumbnail_url = #{photoShumbnailUrl,jdbcType=VARCHAR},
+      photo_original_url = #{photoOriginalUrl,jdbcType=VARCHAR},
+      photo_praise_num = #{photoPraiseNum,jdbcType=INTEGER}
+    where photo_id = #{photoId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select photo_id, album_id, photo_shumbnail_url, photo_original_url, photo_praise_num
+    from photo_info
+    where photo_id = #{photoId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select photo_id, album_id, photo_shumbnail_url, photo_original_url, photo_praise_num
+    from photo_info
+  </select>
+</mapper>

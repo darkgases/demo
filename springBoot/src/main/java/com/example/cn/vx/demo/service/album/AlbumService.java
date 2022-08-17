@@ -1,14 +1,12 @@
-package com.example.cn.vx.demo.service.phone;
+package com.example.cn.vx.demo.service.album;
 
-import com.example.cn.vx.demo.service.phone.api.*;
-import com.example.cn.vx.demo.service.user.api.LoginImplInput;
-import com.example.cn.vx.demo.service.user.api.LoginImplOutput;
+import com.example.cn.vx.demo.service.album.api.*;
 
 /**
  * @author: dengshuai
  * @Date: 2022/08/04 15:21
  */
-public interface PhoneService {
+public interface AlbumService {
     /**
      * @param input
      * @return
@@ -43,6 +41,16 @@ public interface PhoneService {
      * @ps:取消对用户分享相册
      */
     UnShareAlbumOutput unShareAlbum(UnShareAlbumInput input);
+
+    /**
+     * @param input
+     * @return
+     * @ps:获取我的相册列表
+     */
+    GetMyAlbumListOutput getMyAlbumList(GetMyAlbumListInput input);
+
+
+
 
 
 }

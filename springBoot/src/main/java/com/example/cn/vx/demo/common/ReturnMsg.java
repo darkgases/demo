@@ -35,4 +35,8 @@ public class ReturnMsg {
 
     public static final String THE_ALBUM_NOT_BELONG_TO_THIS_USER = "该用户无操作次相册权限";
 
+    public static final String ALREADY_HAS_MAX_ALBUM_NUM = "已经达到允许创建的最大相册数量";
+
+    public static final String USER_ALBUM_IS_NULL = "未拥有相册";
+
 }

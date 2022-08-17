@@ -1,14 +1,14 @@
-package com.example.cn.vx.demo.service.phone.impl;
+package com.example.cn.vx.demo.service.album.impl;
 
 import com.example.cn.vx.demo.common.ReturnCode;
 import com.example.cn.vx.demo.common.ReturnMsg;
 import com.example.cn.vx.demo.entity.AlbumInfo;
-import com.example.cn.vx.demo.entity.UserAlbumInfo;
+import com.example.cn.vx.demo.entity.AlbumInfoList;
 import com.example.cn.vx.demo.entity.UserOtherAlbum;
 import com.example.cn.vx.demo.entity.UserSelfAlbum;
 import com.example.cn.vx.demo.mapper.*;
-import com.example.cn.vx.demo.service.phone.PhoneService;
-import com.example.cn.vx.demo.service.phone.api.*;
+import com.example.cn.vx.demo.service.album.AlbumService;
+import com.example.cn.vx.demo.service.album.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * @author: dengshuai
@@ -26,15 +27,10 @@ import java.util.List;
  */
 @Transactional(rollbackFor = Exception.class)
 @Service
-public class PhoneServiceImpl implements PhoneService {
-    @Autowired
-    private PhoneInfoMapper phoneInfoMapper;
+public class AlbumServiceImpl implements AlbumService {
 
     @Autowired
     private AlbumInfoMapper albumInfoMapper;
-
-//    @Autowired
-//    private UserAlbumInfoMapper userAlbumInfoMapper;
 
     @Autowired
     private UserSelfAlbumMapper userSelfAlbumMapper;
@@ -42,13 +38,25 @@ public class PhoneServiceImpl implements PhoneService {
     @Autowired
     private UserOtherAlbumMapper userOtherAlbumMapper;
 
-    private static final Logger logger = LoggerFactory.getLogger(PhoneServiceImpl.class);
+    ResourceBundle rb = ResourceBundle.getBundle("static/customizeParam");
+
+    private static final Logger logger = LoggerFactory.getLogger(AlbumServiceImpl.class);
 
     @Override
     public AddAlbumOutput addAlbum(AddAlbumInput input) {
         logger.info("PhoneServiceImpl-addAlbum服务开始");
         AddAlbumOutput output = new AddAlbumOutput();
         AlbumInfo albumInfo = new AlbumInfo();
+        int maxAlbumNum = Integer.parseInt(rb.getString("THE_MAX_ALBUM_NUM"));
+        HashMap checkParam = new HashMap();
+        checkParam.put("userId",input.getUserId());
+        List<UserSelfAlbum> albumList = userSelfAlbumMapper.selectByParam(checkParam);
+        if (albumList.size() >= maxAlbumNum){
+            output.setCode(ReturnCode.ALREADY_HAS_MAX_ALBUM_NUM);
+            output.setMsg(ReturnMsg.ALREADY_HAS_MAX_ALBUM_NUM);
+            logger.info("PhoneServiceImpl-addAlbum服务结束");
+            return output;
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
         albumInfo.setAlbumName(input.getAlbumName());
@@ -194,6 +202,27 @@ public class PhoneServiceImpl implements PhoneService {
         out.setCode(ReturnCode.SUCCESS);
         out.setMsg(ReturnMsg.SUCCESS);
         logger.info("PhoneServiceImpl-unShareAlbum服务结束");
+        return out;
+    }
+
+    @Override
+    public GetMyAlbumListOutput getMyAlbumList(GetMyAlbumListInput input){
+        logger.info("PhoneServiceImpl-getMyAlbumList服务开始");
+        GetMyAlbumListOutput out = new GetMyAlbumListOutput();
+        HashMap param = new HashMap();
+        param.put("userId",input.getUserId());
+        param.put("state","0");
+        List<AlbumInfoList> userAlbumInfoList = albumInfoMapper.selectUserOwnAlbumList(param);
+        if (userAlbumInfoList.size() == 0){
+            out.setCode(ReturnCode.USER_ALBUM_IS_NULL);
+            out.setMsg(ReturnMsg.USER_ALBUM_IS_NULL);
+            logger.info("PhoneServiceImpl-getMyAlbumList服务结束");
+            return out;
+        }
+        out.setAlbumInfoList(userAlbumInfoList);
+        out.setCode(ReturnCode.SUCCESS);
+        out.setMsg(ReturnMsg.SUCCESS);
+        logger.info("PhoneServiceImpl-getMyAlbumList服务结束");
         return out;
     }
 }
