@@ -203,7 +203,7 @@ public class AlbumController {
         return output;
     }
 
-    @MyLog(value = "获取我的相册列表！")
+    @MyLog(value = "获取我的相册列表")
     @RequestMapping("/getMyAlbumList")
     public GetMyAlbumListOutput getMyAlbumList(@RequestBody MultiValueMap< String, String > values) {
         logger.info("AlbumController:getMyAlbumList开始");
